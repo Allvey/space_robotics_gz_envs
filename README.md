@@ -26,6 +26,9 @@ https://github.com/user-attachments/assets/5345ebe2-5692-4df4-8bea-1967cc4a2aa1
 
 ## Instructions
 
+Navigation reinforcement learning on the original Gazebo robots and worlds is available through the
+[RLRoverLab algorithm migration guide](docs/NAVIGATION.md).
+
 <details><summary><h3>Installation (Docker)</h3></summary>
 
 This section provides instructions for running the simulation within a Docker container. If you are using a different operating system than Ubuntu, you may need to adjust the following steps accordingly or refer to the official documentation for each step.

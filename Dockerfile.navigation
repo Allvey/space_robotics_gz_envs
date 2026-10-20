@@ -1,0 +1,16 @@
+ARG PROJECT_IMAGE=andrejorsula/space_robotics_gz_envs:latest
+ARG COMPILER_IMAGE=ubuntu:24.04
+FROM ${PROJECT_IMAGE} AS original
+FROM ${COMPILER_IMAGE} AS compiler
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN if ! command -v c++ >/dev/null || ! pkg-config --exists gz-sim9 || [ ! -f /usr/include/nlohmann/json.hpp ]; then \
+    apt-get update && apt-get install -y --no-install-recommends ca-certificates curl gnupg g++ pkg-config nlohmann-json3-dev && \
+    curl -fsSL https://packages.osrfoundation.org/gazebo.gpg -o /usr/share/keyrings/gazebo.gpg && \
+    echo 'deb [signed-by=/usr/share/keyrings/gazebo.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-stable noble main' > /etc/apt/sources.list.d/gazebo.list && \
+    apt-get update && apt-get install -y --no-install-recommends libgz-sim9-dev && rm -rf /var/lib/apt/lists/*; fi
+COPY --from=original /usr/include/gz/ /usr/include/gz/
+COPY native/navigation/worker.cc /src/worker.cc
+RUN c++ -std=c++17 -O2 /src/worker.cc $(pkg-config --cflags --libs gz-sim9) -lfmt -o /navigation-worker
+FROM original
+COPY --from=compiler /navigation-worker /usr/local/bin/navigation-worker
+ENTRYPOINT ["/usr/local/bin/navigation-worker"]

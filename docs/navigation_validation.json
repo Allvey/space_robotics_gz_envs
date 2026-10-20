@@ -1,0 +1,1042 @@
+{
+  "source_commit": "578906ad5c3383087aeec038be82b87e05d4ee2c",
+  "original_deployment_files_unchanged": true,
+  "tests": "........................                                                 [100%]\n24 passed in 46.46s",
+  "runtime_image_id": "sha256:8a383640dbf02aacffcecbb03378121641152f4b807ad14e139e0b94e24da2c3",
+  "gazebo_libraries": "libgz-physics8:amd64\t8.0.0-1~noble\nlibgz-sim9:amd64\t9.0.0-1~noble",
+  "python_packages": {
+    "torch": "2.11.0+cu128",
+    "skrl": "2.1.0",
+    "gymnasium": "1.2.1",
+    "numpy": "2.3.1",
+    "scipy": "1.17.0",
+    "warp-lang": "1.13.0",
+    "trimesh": "4.11.1"
+  },
+  "training": {
+    "contract": "rlroverlab-gazebo-navigation-v1",
+    "upstream_commit": "578906ad5c3383087aeec038be82b87e05d4ee2c",
+    "environment": {
+      "world": "moon",
+      "assets": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache",
+      "image": "space-robotics-rl:ionic",
+      "device": "cuda:0",
+      "seed": 42,
+      "control_dt": 0.2,
+      "episode_seconds": 150.0,
+      "target_distance": 9.0,
+      "success_distance": 0.18,
+      "contact_threshold": 1.0,
+      "settle_steps": 100,
+      "spawn_margin": 10.0,
+      "target_margin": 7.0,
+      "slope_limit": 0.35,
+      "obstacle_margin": 2.0
+    },
+    "world": {
+      "source": "/home/robot/xiaotong/space_robotics_gz_envs/worlds/moon.sdf",
+      "sha256": "71eefd82f0e3fced520a95476d0f8efcb4ff4cf376877165ba80d168fbfb4775",
+      "physics_dt": 0.025,
+      "gravity": [
+        0.0,
+        0.0,
+        -1.622
+      ],
+      "models": [
+        {
+          "name": "explorer_r2_sensor_config_1",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/fuel/fuel/fuel.gazebosim.org/openrobotics/models/explorer_r2_sensor_config_1/17/model.sdf",
+          "pose": "0 0 0.45 0 0 0",
+          "static": false,
+          "sha256": "b488a90736ad956f973325dbd9956a6980b2bc19bd68af1bbc7b3c1f882eb6f5",
+          "controller": "<plugin filename=\"gz-sim-diff-drive-system\" name=\"gz::sim::systems::DiffDrive\">\n        <topic>/cmd_vel</topic>\n        <left_joint>left_front_wheel</left_joint>\n        <left_joint>left_rear_wheel</left_joint>\n        <right_joint>right_front_wheel</right_joint>\n        <right_joint>right_rear_wheel</right_joint>\n        <wheel_separation>0.275</wheel_separation>\n        <wheel_radius>0.31</wheel_radius>\n        <max_linear_acceleration>1.0</max_linear_acceleration>\n        <min_linear_acceleration>-1.0</min_linear_acceleration>\n        <max_angular_acceleration>2.0</max_angular_acceleration>\n        <min_angular_acceleration>-2.0</min_angular_acceleration>\n        <max_linear_velocity>0.5</max_linear_velocity>\n        <min_linear_velocity>-0.5</min_linear_velocity>\n        <max_angular_velocity>1.0</max_angular_velocity>\n        <min_angular_velocity>-1.0</min_angular_velocity>\n      </plugin>\n    ",
+          "body": "base_link",
+          "limits": {
+            "max_linear_velocity": 0.5,
+            "min_linear_velocity": -0.5,
+            "max_angular_velocity": 1.0,
+            "min_angular_velocity": -1.0
+          }
+        },
+        {
+          "name": "lunar_surface0",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_surface0/model.sdf",
+          "pose": "0 0 0 0 0 0",
+          "static": true,
+          "sha256": "bdd52e0beeaca7a2950e28a2cbcfc7471e80186ba798eaf4d8c5dec2c9ad2356"
+        },
+        {
+          "name": "lunar_rock0",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock0/model.sdf",
+          "pose": "0.05 -3.0 0.1 0 0 0",
+          "static": false,
+          "sha256": "b5c23313d16cc9ae39dfb98007ba92d582c7370e0e1320dd742f348bf7144000"
+        },
+        {
+          "name": "lunar_rock1",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock1/model.sdf",
+          "pose": "-0.05 -3.0 0.2 0 0 0",
+          "static": false,
+          "sha256": "88ecbfc6518031a79e12d62a1ca6a5210e090108edba6e61862edfeac7396429"
+        },
+        {
+          "name": "lunar_rock2",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock2/model.sdf",
+          "pose": "0.1 -3.0 0.3 0 0 0",
+          "static": false,
+          "sha256": "c17d530462966caaef4bf7716427e7ef5329402f08fcb21eb8eb9a3300890c10"
+        },
+        {
+          "name": "lunar_rock3",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock3/model.sdf",
+          "pose": "-0.1 -3.0 0.4 0 0 0",
+          "static": false,
+          "sha256": "8d3f06b60000641c9aa76a18fdbde1c3c2d130deaa97bba1b2c04dbeda00db41"
+        },
+        {
+          "name": "lunar_rock4",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock4/model.sdf",
+          "pose": "0.05 -3.0 0.5 0 0 0",
+          "static": false,
+          "sha256": "e2b66c32e4e1d11bdd9bab9c69eb74245182320b991aa20211826f5cb5ee2f14"
+        },
+        {
+          "name": "lunar_rock5",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock5/model.sdf",
+          "pose": "-0.05 -3.0 0.6 0 0 0",
+          "static": false,
+          "sha256": "573a18005159b2d0880625482a1fe3a8d7a84fe4a01d95b2d5eca4efcb2ec3d7"
+        },
+        {
+          "name": "lunar_rock6",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock6/model.sdf",
+          "pose": "0.1 -3.0 0.7 0 0 0",
+          "static": false,
+          "sha256": "80703e74c9588490d7ccfe2ea3a406a25e804040769865cca390872e36673753"
+        },
+        {
+          "name": "lunar_rock7",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock7/model.sdf",
+          "pose": "-0.1 -3.0 0.8 0 0 0",
+          "static": false,
+          "sha256": "c997a25e63caefa3b833fb8e15d646ed33379e067f9f7961b9bf60148d9dae7c"
+        },
+        {
+          "name": "lunar_rock8",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock8/model.sdf",
+          "pose": "0.05 -3.1 0.1 0 0 0",
+          "static": false,
+          "sha256": "24f317aa01c6a76e266ff55e6d198b436a558ebef433d9e129ab65f1a6359756"
+        },
+        {
+          "name": "lunar_rock9",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock9/model.sdf",
+          "pose": "-0.05 -3.1 0.2 0 0 0",
+          "static": false,
+          "sha256": "bb1191c82608b5d7d45d7ef405270184cb7686d22498315a2455f5c1b9bbdacc"
+        },
+        {
+          "name": "lunar_rock10",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock10/model.sdf",
+          "pose": "0.1 -3.1 0.3 0 0 0",
+          "static": false,
+          "sha256": "c1cfdd359d4af88d4aaac9149212e0a949d0808d7e157f58a61d04aaf823d5a1"
+        },
+        {
+          "name": "lunar_rock11",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock11/model.sdf",
+          "pose": "-0.1 -3.1 0.4 0 0 0",
+          "static": false,
+          "sha256": "1d8a721c5638ee45e690932757ffd594820a96b3fb195fb3f5e7f1e2c7fc1c8a"
+        },
+        {
+          "name": "lunar_rock12",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock12/model.sdf",
+          "pose": "0.05 -3.1 0.5 0 0 0",
+          "static": false,
+          "sha256": "23b6d668e1ee1a1342bed059d5ad18e36afcdcb03948a803193f975cd4b7a451"
+        },
+        {
+          "name": "lunar_rock13",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock13/model.sdf",
+          "pose": "-0.05 -3.1 0.6 0 0 0",
+          "static": false,
+          "sha256": "55e18fe2656b24273884f9c83e8f97e36ac8e0467dc64971b4cc063bebee50eb"
+        },
+        {
+          "name": "lunar_rock14",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock14/model.sdf",
+          "pose": "0.1 -3.1 0.7 0 0 0",
+          "static": false,
+          "sha256": "72d1a7fc0a50c02efc60317b1d29471172f4f41b690b12220ba9ae632be93b71"
+        },
+        {
+          "name": "lunar_rock15",
+          "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/lunar_rock15/model.sdf",
+          "pose": "-0.1 -3.1 0.8 0 0 0",
+          "static": false,
+          "sha256": "57ac02e9d6132e21c456a5f2933b5cbd485c1fd23e337c6f10a5ed7b39478d54"
+        }
+      ],
+      "robot": {
+        "name": "explorer_r2_sensor_config_1",
+        "path": "/home/robot/xiaotong/space_robotics_gz_envs/assets/cache/fuel/fuel/fuel.gazebosim.org/openrobotics/models/explorer_r2_sensor_config_1/17/model.sdf",
+        "pose": "0 0 0.45 0 0 0",
+        "static": false,
+        "sha256": "b488a90736ad956f973325dbd9956a6980b2bc19bd68af1bbc7b3c1f882eb6f5",
+        "controller": "<plugin filename=\"gz-sim-diff-drive-system\" name=\"gz::sim::systems::DiffDrive\">\n        <topic>/cmd_vel</topic>\n        <left_joint>left_front_wheel</left_joint>\n        <left_joint>left_rear_wheel</left_joint>\n        <right_joint>right_front_wheel</right_joint>\n        <right_joint>right_rear_wheel</right_joint>\n        <wheel_separation>0.275</wheel_separation>\n        <wheel_radius>0.31</wheel_radius>\n        <max_linear_acceleration>1.0</max_linear_acceleration>\n        <min_linear_acceleration>-1.0</min_linear_acceleration>\n        <max_angular_acceleration>2.0</max_angular_acceleration>\n        <min_angular_acceleration>-2.0</min_angular_acceleration>\n        <max_linear_velocity>0.5</max_linear_velocity>\n        <min_linear_velocity>-0.5</min_linear_velocity>\n        <max_angular_velocity>1.0</max_angular_velocity>\n        <min_angular_velocity>-1.0</min_angular_velocity>\n      </plugin>\n    ",
+        "body": "base_link",
+        "limits": {
+          "max_linear_velocity": 0.5,
+          "min_linear_velocity": -0.5,
+          "max_angular_velocity": 1.0,
+          "min_angular_velocity": -1.0
+        }
+      },
+      "heading_offset": 0.0
+    },
+    "experiment": {
+      "seed": 42,
+      "models": {
+        "separate": false,
+        "policy": {
+          "type": "GaussianPolicyConv",
+          "params": {
+            "mlp_input_size": 5,
+            "mlp_layers": [
+              256,
+              160,
+              128
+            ],
+            "mlp_activation": "leaky_relu",
+            "encoder_layers": [
+              8,
+              16,
+              32,
+              64
+            ],
+            "encoder_activation": "leaky_relu"
+          }
+        },
+        "value": {
+          "type": "ValueNetworkConv",
+          "params": {
+            "mlp_input_size": 5,
+            "mlp_layers": [
+              256,
+              160,
+              128
+            ],
+            "mlp_activation": "leaky_relu",
+            "encoder_layers": [
+              8,
+              16,
+              32,
+              64
+            ],
+            "encoder_activation": "leaky_relu"
+          }
+        }
+      },
+      "agent": {
+        "rollouts": 60,
+        "learning_epochs": 4,
+        "mini_batches": 8,
+        "discount_factor": 0.99,
+        "gae_lambda": 0.95,
+        "learning_rate": 0.0001,
+        "random_timesteps": 0,
+        "learning_starts": 0,
+        "grad_norm_clip": 0.5,
+        "ratio_clip": 0.2,
+        "value_clip": 0.2,
+        "entropy_loss_scale": 0.0,
+        "value_loss_scale": 1.0,
+        "kl_threshold": 0.008,
+        "experiment": {
+          "directory": "rover",
+          "experiment_name": "",
+          "write_interval": 40,
+          "checkpoint_interval": 400,
+          "wandb": false
+        }
+      },
+      "trainer": {
+        "environment_info": "log",
+        "timesteps": 1000000
+      }
+    },
+    "training_steps": 3000,
+    "num_envs": 4,
+    "action_interface": {
+      "layout": [
+        "linear_mps",
+        "angular_radps"
+      ],
+      "transport": "/cmd_vel",
+      "limits": {
+        "max_linear_velocity": 0.5,
+        "min_linear_velocity": -0.5,
+        "max_angular_velocity": 1.0,
+        "min_angular_velocity": -1.0
+      }
+    },
+    "evaluation_seeds": [],
+    "elapsed_training_seconds": 322.2418375479756
+  },
+  "evaluations": {
+    "stochastic": {
+      "before": {
+        "metrics": {
+          "return": -6.502541067698791,
+          "success": 0.0,
+          "collision": 0.125,
+          "out_of_bounds": 0.0,
+          "length": 508.75,
+          "distance": 10.248771607875824,
+          "distance_progress": -1.2517144083976746,
+          "return_per_step": -0.012781407504076248
+        },
+        "episodes": [
+          {
+            "seed": 30001,
+            "return": -1.8546065665764224,
+            "length": 94,
+            "success": false,
+            "collision": true,
+            "out_of_bounds": false,
+            "distance": 7.765835285186768,
+            "distance_progress": 1.1865649223327637,
+            "reward_terms": {
+              "distance_to_target": 0.012814436457119882,
+              "reached_target": 0.0,
+              "oscillation": -1.2678419514607415,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": -0.00559999994002283,
+              "collision": -0.6000000000000001,
+              "far_from_target": 0.0,
+              "angle_diff": 0.006020948367222445
+            }
+          },
+          {
+            "seed": 30000,
+            "return": -3.740041739691938,
+            "length": 268,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.118667602539062,
+            "distance_progress": -3.024477958679199,
+            "reward_terms": {
+              "distance_to_target": 0.03020747975097038,
+              "reached_target": 0.0,
+              "oscillation": -3.2146063952791017,
+              "angle_to_target": -0.1600548539310694,
+              "heading_soft_contraint": -0.016133333160541916,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.0205453629278054
+            }
+          },
+          {
+            "seed": 30002,
+            "return": -9.043809926324842,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 6.404474258422852,
+            "distance_progress": 2.570357322692871,
+            "reward_terms": {
+              "distance_to_target": 0.23615698101639282,
+              "reached_target": 0.0,
+              "oscillation": -9.314987107143484,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": -0.0483999994816261,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.08342019928386435
+            }
+          },
+          {
+            "seed": 30003,
+            "return": -10.030462444565885,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 10.146015167236328,
+            "distance_progress": -1.1025943756103516,
+            "reward_terms": {
+              "distance_to_target": 0.09477887799585005,
+              "reached_target": 0.0,
+              "oscillation": -9.89954965179082,
+              "angle_to_target": -0.2281203453429044,
+              "heading_soft_contraint": -0.04666666616685709,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.049095340738858795
+            }
+          },
+          {
+            "seed": 30004,
+            "return": -2.015662132569697,
+            "length": 173,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.076556205749512,
+            "distance_progress": -3.1247968673706055,
+            "reward_terms": {
+              "distance_to_target": 0.017968161540920846,
+              "reached_target": 0.0,
+              "oscillation": -1.6266962458384577,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": -0.012799999862909297,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.005865951590749319
+            }
+          },
+          {
+            "seed": 30005,
+            "return": -7.195041890601958,
+            "length": 535,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.160999298095703,
+            "distance_progress": -3.1593055725097656,
+            "reward_terms": {
+              "distance_to_target": 0.07973483100067824,
+              "reached_target": 0.0,
+              "oscillation": -6.241726941290355,
+              "angle_to_target": -0.6231230816105384,
+              "heading_soft_contraint": -0.03466666629537936,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.024739967593632173
+            }
+          },
+          {
+            "seed": 30006,
+            "return": -8.425655390365227,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 9.603216171264648,
+            "distance_progress": -0.6617002487182617,
+            "reward_terms": {
+              "distance_to_target": 0.12580157589400187,
+              "reached_target": 0.0,
+              "oscillation": -8.500496755453883,
+              "angle_to_target": -0.07000556881539524,
+              "heading_soft_contraint": -0.05213333277497473,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.07117869078501826
+            }
+          },
+          {
+            "seed": 30007,
+            "return": -9.715048450894361,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 11.714408874511719,
+            "distance_progress": -2.6977624893188477,
+            "reward_terms": {
+              "distance_to_target": 0.08254186479462078,
+              "reached_target": 0.0,
+              "oscillation": -9.748687903118082,
+              "angle_to_target": -0.041352806962095194,
+              "heading_soft_contraint": -0.048666666145436716,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.04111706053663511
+            }
+          }
+        ],
+        "stochastic": true,
+        "action_seed": 12345
+      },
+      "after": {
+        "metrics": {
+          "return": -4.306969866948879,
+          "success": 0.0,
+          "collision": 0.0,
+          "out_of_bounds": 0.0,
+          "length": 528.0,
+          "distance": 10.062526285648346,
+          "distance_progress": -1.060679018497467,
+          "return_per_step": -0.008157139899524393
+        },
+        "episodes": [
+          {
+            "seed": 30003,
+            "return": -2.375670855584904,
+            "length": 232,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.066657066345215,
+            "distance_progress": -3.0232362747192383,
+            "reward_terms": {
+              "distance_to_target": 0.02293459059728775,
+              "reached_target": 0.0,
+              "oscillation": -1.9874538907051456,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": -0.018133333139121487,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.006981777662076638
+            }
+          },
+          {
+            "seed": 30000,
+            "return": -4.409228345850924,
+            "length": 535,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.153639793395996,
+            "distance_progress": -3.059450149536133,
+            "reward_terms": {
+              "distance_to_target": 0.05144073610426858,
+              "reached_target": 0.0,
+              "oscillation": -4.039394439062226,
+              "angle_to_target": -0.008889558515511455,
+              "heading_soft_contraint": -0.03666666627395898,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.024281581896502757
+            }
+          },
+          {
+            "seed": 30001,
+            "return": -5.365003006142411,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 10.551265716552734,
+            "distance_progress": -1.5988655090332031,
+            "reward_terms": {
+              "distance_to_target": 0.08054192792769754,
+              "reached_target": 0.0,
+              "oscillation": -5.442305674387524,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": -0.053066666098311885,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.049827406415715814
+            }
+          },
+          {
+            "seed": 30002,
+            "return": -5.861625635576055,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 8.051587104797363,
+            "distance_progress": 0.9232444763183594,
+            "reward_terms": {
+              "distance_to_target": 0.22625170137325767,
+              "reached_target": 0.0,
+              "oscillation": -6.1055631946373685,
+              "angle_to_target": -0.004069105815142394,
+              "heading_soft_contraint": -0.053066666098311885,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.07482162960150163
+            }
+          },
+          {
+            "seed": 30004,
+            "return": -0.8040969123943613,
+            "length": 66,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.012934684753418,
+            "distance_progress": -3.0589170455932617,
+            "reward_terms": {
+              "distance_to_target": 0.007362424592429306,
+              "reached_target": 0.0,
+              "oscillation": -0.4079909584866801,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": -0.005733333271928136,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.002264954771817429
+            }
+          },
+          {
+            "seed": 30007,
+            "return": -3.6820546229772964,
+            "length": 391,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.073378562927246,
+            "distance_progress": -3.0566530227661133,
+            "reward_terms": {
+              "distance_to_target": 0.03666159934800817,
+              "reached_target": 0.0,
+              "oscillation": -3.1849127659747976,
+              "angle_to_target": -0.12230013830121605,
+              "heading_soft_contraint": -0.028533333027735253,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.01703001497844525
+            }
+          },
+          {
+            "seed": 30005,
+            "return": -6.430388312349941,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 7.986513614654541,
+            "distance_progress": 1.0508065223693848,
+            "reward_terms": {
+              "distance_to_target": 0.17396405087492894,
+              "reached_target": 0.0,
+              "oscillation": -6.14972959019766,
+              "angle_to_target": -0.4644468187121677,
+              "heading_soft_contraint": -0.050933332787826954,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.06075737847277196
+            }
+          },
+          {
+            "seed": 30006,
+            "return": -5.527691244715143,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 5.604233741760254,
+            "distance_progress": 3.3376388549804688,
+            "reward_terms": {
+              "distance_to_target": 0.3876859195443103,
+              "reached_target": 0.0,
+              "oscillation": -5.461994338713619,
+              "angle_to_target": -0.45538204635959134,
+              "heading_soft_contraint": -0.057466666051187054,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.0594658868649276
+            }
+          }
+        ],
+        "stochastic": true,
+        "action_seed": 12345
+      },
+      "comparison": {
+        "return_gain": 2.195571200749912,
+        "return_gain_95_ci": [
+          -0.18117395045120666,
+          4.528537834006358
+        ],
+        "return_improved": false,
+        "step_return_gain": 0.004676293552959857,
+        "step_return_gain_95_ci": [
+          0.0025479326999278858,
+          0.007318597800647246
+        ],
+        "step_return_improved": true,
+        "success_rate_change": 0.0,
+        "collision_rate_change": -0.125
+      }
+    },
+    "deterministic": {
+      "before": {
+        "metrics": {
+          "return": -0.3322282630586586,
+          "success": 0.0,
+          "collision": 0.25,
+          "out_of_bounds": 0.0,
+          "length": 614.625,
+          "distance": 9.030135810375214,
+          "distance_progress": -0.0291176438331604,
+          "return_per_step": -0.000540538154254478
+        },
+        "episodes": [
+          {
+            "seed": 30001,
+            "return": -0.568735492451025,
+            "length": 145,
+            "success": false,
+            "collision": true,
+            "out_of_bounds": false,
+            "distance": 8.205662727355957,
+            "distance_progress": 0.7467374801635742,
+            "reward_terms": {
+              "distance_to_target": 0.021195769877522253,
+              "reached_target": 0.0,
+              "oscillation": -1.2198245258332466e-09,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": 0.0,
+              "collision": -0.6000000000000001,
+              "far_from_target": 0.0,
+              "angle_diff": 0.010068738891277462
+            }
+          },
+          {
+            "seed": 30000,
+            "return": -0.748804707241085,
+            "length": 575,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.008757591247559,
+            "distance_progress": -2.9145679473876953,
+            "reward_terms": {
+              "distance_to_target": 0.06259463965398027,
+              "reached_target": 0.0,
+              "oscillation": -2.2251484210755733e-09,
+              "angle_to_target": -0.4573201686143876,
+              "heading_soft_contraint": 0.0,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.04592082394447061
+            }
+          },
+          {
+            "seed": 30002,
+            "return": -0.13674174320933077,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 9.913055419921875,
+            "distance_progress": -0.9382238388061523,
+            "reward_terms": {
+              "distance_to_target": 0.11408483320701635,
+              "reached_target": 0.0,
+              "oscillation": -1.5965444788434982e-09,
+              "angle_to_target": -0.28568601098377255,
+              "heading_soft_contraint": 0.0,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.034859436163969804
+            }
+          },
+          {
+            "seed": 30003,
+            "return": 0.10519531344779728,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 6.9899373054504395,
+            "distance_progress": 2.053483486175537,
+            "reward_terms": {
+              "distance_to_target": 0.15393012459389865,
+              "reached_target": 0.0,
+              "oscillation": -1.872654706858157e-09,
+              "angle_to_target": -0.12024225785862655,
+              "heading_soft_contraint": 0.0,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.0715074485851801
+            }
+          },
+          {
+            "seed": 30005,
+            "return": -0.8764113748374829,
+            "length": 564,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.003801345825195,
+            "distance_progress": -2.9664793014526367,
+            "reward_terms": {
+              "distance_to_target": 0.055860148298961576,
+              "reached_target": 0.0,
+              "oscillation": -2.2993506831880956e-09,
+              "angle_to_target": -0.5507093984400863,
+              "heading_soft_contraint": 0.0,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.018437877602991648
+            }
+          },
+          {
+            "seed": 30006,
+            "return": -0.5092158553185632,
+            "length": 633,
+            "success": false,
+            "collision": true,
+            "out_of_bounds": false,
+            "distance": 7.437106132507324,
+            "distance_progress": 1.5047664642333984,
+            "reward_terms": {
+              "distance_to_target": 0.091305583002395,
+              "reached_target": 0.0,
+              "oscillation": -1.5143645271109564e-09,
+              "angle_to_target": -0.05011675553396345,
+              "heading_soft_contraint": 0.0,
+              "collision": -0.6000000000000001,
+              "far_from_target": 0.0,
+              "angle_diff": 0.049595318727369886
+            }
+          },
+          {
+            "seed": 30004,
+            "return": -0.171254429208767,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 9.914180755615234,
+            "distance_progress": -0.9667186737060547,
+            "reward_terms": {
+              "distance_to_target": 0.11775610165932449,
+              "reached_target": 0.0,
+              "oscillation": -2.018333589148824e-09,
+              "angle_to_target": -0.34484180097933864,
+              "heading_soft_contraint": 0.0,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.05583127212958061
+            }
+          },
+          {
+            "seed": 30007,
+            "return": 0.24814218434918814,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 5.768585205078125,
+            "distance_progress": 3.248061180114746,
+            "reward_terms": {
+              "distance_to_target": 0.16904360664193518,
+              "reached_target": 0.0,
+              "oscillation": -1.650125227570243e-09,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": 0.0,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.07909857935737818
+            }
+          }
+        ],
+        "stochastic": false,
+        "action_seed": 12345
+      },
+      "after": {
+        "metrics": {
+          "return": -0.29560233618393217,
+          "success": 0.0,
+          "collision": 0.125,
+          "out_of_bounds": 0.0,
+          "length": 654.25,
+          "distance": 8.021529078483582,
+          "distance_progress": 0.9802701473236084,
+          "return_per_step": -0.000451818626188662
+        },
+        "episodes": [
+          {
+            "seed": 30000,
+            "return": -0.39650937704033773,
+            "length": 258,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 12.03491497039795,
+            "distance_progress": -2.940725326538086,
+            "reward_terms": {
+              "distance_to_target": 0.028381022028042935,
+              "reached_target": 0.0,
+              "oscillation": -1.3643263574891764e-07,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": -0.03439999963156874,
+              "collision": 0.0,
+              "far_from_target": -0.4,
+              "angle_diff": 0.009509736995823914
+            }
+          },
+          {
+            "seed": 30001,
+            "return": -0.8362438315211281,
+            "length": 476,
+            "success": false,
+            "collision": true,
+            "out_of_bounds": false,
+            "distance": 6.791305065155029,
+            "distance_progress": 2.161095142364502,
+            "reward_terms": {
+              "distance_to_target": 0.07896398901357315,
+              "reached_target": 0.0,
+              "oscillation": -3.490115297033469e-07,
+              "angle_to_target": -0.28739375544246304,
+              "heading_soft_contraint": -0.060399999353103834,
+              "collision": -0.6000000000000001,
+              "far_from_target": 0.0,
+              "angle_diff": 0.03258628327239421
+            }
+          },
+          {
+            "seed": 30002,
+            "return": 0.03390661696525073,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 9.952268600463867,
+            "distance_progress": -0.9774370193481445,
+            "reward_terms": {
+              "distance_to_target": 0.08639269950799644,
+              "reached_target": 0.0,
+              "oscillation": -1.564696140121669e-07,
+              "angle_to_target": 0.0,
+              "heading_soft_contraint": -0.09999999892898036,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.04751407285584719
+            }
+          },
+          {
+            "seed": 30003,
+            "return": -0.15203079380849346,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 7.184401035308838,
+            "distance_progress": 1.8590197563171387,
+            "reward_terms": {
+              "distance_to_target": 0.16479330721631413,
+              "reached_target": 0.0,
+              "oscillation": -2.3321959631061874e-07,
+              "angle_to_target": -0.27245739027857796,
+              "heading_soft_contraint": -0.09999999892898036,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.05563352140234201
+            }
+          },
+          {
+            "seed": 30004,
+            "return": -0.251422392979912,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 7.563179016113281,
+            "distance_progress": 1.3904895782470703,
+            "reward_terms": {
+              "distance_to_target": 0.1039271053741686,
+              "reached_target": 0.0,
+              "oscillation": -1.7465052419396447e-07,
+              "angle_to_target": -0.3002526956610381,
+              "heading_soft_contraint": -0.09999999892898036,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.044903370886459015
+            }
+          },
+          {
+            "seed": 30005,
+            "return": -0.28437294241114025,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 6.070956707000732,
+            "distance_progress": 2.9664082527160645,
+            "reward_terms": {
+              "distance_to_target": 0.10830679281934863,
+              "reached_target": 0.0,
+              "oscillation": -2.483982121503914e-07,
+              "angle_to_target": -0.3390079795382919,
+              "heading_soft_contraint": -0.09999999892898036,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.04632849163499486
+            }
+          },
+          {
+            "seed": 30006,
+            "return": -0.2791578078214291,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 5.9429402351379395,
+            "distance_progress": 2.998932361602783,
+            "reward_terms": {
+              "distance_to_target": 0.14791359619994182,
+              "reached_target": 0.0,
+              "oscillation": -2.0347081234106667e-07,
+              "angle_to_target": -0.37851360000204287,
+              "heading_soft_contraint": -0.09999999892898036,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.05144239838045905
+            }
+          },
+          {
+            "seed": 30007,
+            "return": -0.19898816085426696,
+            "length": 750,
+            "success": false,
+            "collision": false,
+            "out_of_bounds": false,
+            "distance": 8.632266998291016,
+            "distance_progress": 0.38437843322753906,
+            "reward_terms": {
+              "distance_to_target": 0.1310453769765445,
+              "reached_target": 0.0,
+              "oscillation": -2.983603112127753e-07,
+              "angle_to_target": -0.2800669979536904,
+              "heading_soft_contraint": -0.09999999892898036,
+              "collision": 0.0,
+              "far_from_target": 0.0,
+              "angle_diff": 0.05003375741216587
+            }
+          }
+        ],
+        "stochastic": false,
+        "action_seed": 12345
+      },
+      "comparison": {
+        "return_gain": 0.03662592687472643,
+        "return_gain_95_ci": [
+          -0.19301527491588488,
+          0.26612975067295064
+        ],
+        "return_improved": false,
+        "step_return_gain": 0.0003399254423427612,
+        "step_return_gain_95_ci": [
+          -0.00020106163753334078,
+          0.0009797242771792379
+        ],
+        "step_return_improved": false,
+        "success_rate_change": 0.0,
+        "collision_rate_change": -0.125
+      }
+    }
+  },
+  "resume_smoke": {
+    "completed": true,
+    "additional_vector_steps": 60
+  },
+  "gui_smoke": {
+    "checkpoint": "/home/robot/xiaotong/space_robotics_gz_envs/logs/navigation/moon_ppo/final.pt",
+    "completed_control_steps": 200,
+    "observed_exit_code": 0
+  },
+  "stochastic_step_reward_gate_passed": true,
+  "stochastic_episode_reward_gate_passed": false,
+  "deterministic_episode_reward_gate_passed": false,
+  "successful_navigation_observed": false
+}

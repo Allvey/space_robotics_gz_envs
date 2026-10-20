@@ -9,3 +9,7 @@ Dockerfile*
 ## Git
 .git/
 .gitignore
+.venv/
+.cache/
+logs/
+**/__pycache__/

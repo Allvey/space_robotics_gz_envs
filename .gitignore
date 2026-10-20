@@ -3,3 +3,9 @@
 
 ## Cache
 assets/cache/
+.venv/
+.cache/
+logs/
+__pycache__/
+*.egg-info/
+.pytest_cache/

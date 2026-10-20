@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/abmoRobotics/RLRoverLab",
+  "commit": "578906ad5c3383087aeec038be82b87e05d4ee2c",
+  "files": {
+    "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "rover_envs/envs/navigation/learning/skrl/models.py": "17dae7689fb182a9537e2b4a788acec09547705f614c537a7560ca801e3d59c1",
+    "rover_envs/learning/models/registry.py": "1813d739d0adfd03a81e956b2e8a9a7ec360e87d0045c133107a76da5c265d49",
+    "rover_envs/learning/models/base_models.py": "389cc7587a80f04bdee24b138d4235242a4a51312fd56256e467f6724dc2f409",
+    "rover_envs/envs/navigation/mdp/observations.py": "bfb82ecb247c9ca7a8f8d078dc172e1e5921d279b681c082c8eb13a36cb2eda0",
+    "rover_envs/envs/navigation/mdp/rewards.py": "e4a2a60460b445ddfa6481a84987ceb5cda4ffdb4bdf4d35b0d1bd2c628fcf76",
+    "rover_envs/envs/navigation/mdp/terminations.py": "e48ae5e938640ca982b333bec241776aa84f60edf3c5ef09389444860243ba02",
+    "rover_envs/envs/navigation/rover_env_cfg.py": "2beb70bdf7192d55b20b95359e5d61fbe304f6d6c7d69e4d8d9aaf0b6f6de06a",
+    "rover_envs/envs/navigation/utils/terrains/terrain_importer.py": "312699ac546a4928b41ba772af4d58d3c8f0cf4d4660426249388243cfdacafd",
+    "rover_envs/envs/navigation/learning/skrl/configs/rover_ppo.yaml": "43899bff5b3a2bc7ecdf52e5de67dff37438934b09be7a8aa0634a225b8f1839",
+    "rover_envs/envs/navigation/utils/terrains/terrain_utils.py": "72965aae9e2c62ef52c174bc007e5137f9ca64b185be8a3da10e1ff54ec64565"
+  }
+}

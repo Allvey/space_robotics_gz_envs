@@ -1,0 +1,4 @@
+*
+!native/
+!native/navigation/
+!native/navigation/worker.cc
