@@ -1,7 +1,9 @@
 """Paired held-out evaluation. Deterministic and sampled policy modes are separate."""
 
 import argparse
+import hashlib
 import json
+from dataclasses import asdict
 from pathlib import Path
 
 import numpy as np
@@ -9,15 +11,25 @@ import torch
 
 from .config import CONTRACT, NavigationConfig
 from .learning import create_agent, policy_action
+from .planning.terminal import (
+    TerminalController,
+    add_terminal_arguments,
+    terminal_config,
+)
 from .vector_env import GazeboVectorEnv
 
 
-def evaluate(agent, env, seeds, *, stochastic=False, action_seed=12345):
+def evaluate(
+    agent, env, seeds, *, stochastic=False, action_seed=12345, terminal_cfg=None
+):
     old = agent.policy.training
     agent.policy.eval()
     results = []
     devices = [env.device] if env.device.type == "cuda" else []
+    controllers = []
     try:
+        if terminal_cfg is not None:
+            controllers = [TerminalController(e, terminal_cfg) for e in env.envs]
         with torch.random.fork_rng(devices=devices):
             torch.manual_seed(action_seed)
             for start in range(0, len(seeds), env.num_envs):
@@ -28,6 +40,8 @@ def evaluate(agent, env, seeds, *, stochastic=False, action_seed=12345):
                     for s in padded
                 ]
                 obs, _ = env.reset_seeds(padded)
+                for controller in controllers:
+                    controller.reset()
                 active = set(range(len(batch)))
                 while active:
                     if stochastic:
@@ -46,6 +60,14 @@ def evaluate(agent, env, seeds, *, stochastic=False, action_seed=12345):
                             )
                     else:
                         actions = policy_action(agent, obs)
+                    if controllers:
+                        requested = actions.detach().cpu().numpy()
+                        actions = torch.as_tensor(
+                            np.stack(
+                                [c.action(a) for c, a in zip(controllers, requested)]
+                            ),
+                            device=env.device,
+                        )
                     obs, _, _, _, info = env.step(actions)
                     for index in list(active):
                         if "episode" in info["individual"][index]:
@@ -53,9 +75,20 @@ def evaluate(agent, env, seeds, *, stochastic=False, action_seed=12345):
                                 {
                                     "seed": batch[index],
                                     **info["individual"][index]["episode"],
+                                    "heading_error": info["individual"][index][
+                                        "heading_error"
+                                    ],
+                                    **(
+                                        {"terminal": controllers[index].report()}
+                                        if controllers
+                                        else {}
+                                    ),
                                 }
                             )
                             active.remove(index)
+                    for index, controller in enumerate(controllers):
+                        if "episode" in info["individual"][index]:
+                            controller.reset()
     finally:
         agent.policy.train(old)
     metrics = {
@@ -70,12 +103,25 @@ def evaluate(agent, env, seeds, *, stochastic=False, action_seed=12345):
             "distance_progress",
             "min_distance",
             "position_reached",
+            "heading_error",
         )
     }
     metrics["return_per_step"] = sum(r["return"] for r in results) / sum(
         r["length"] for r in results
     )
+    if controllers:
+        metrics["terminal_handoff_rate"] = float(
+            np.mean([r["terminal"]["handoffs"] > 0 for r in results])
+        )
+        metrics["terminal_control_fraction"] = sum(
+            r["terminal"]["controlled_steps"] for r in results
+        ) / sum(r["length"] for r in results)
     return {
+        "navigation_mode": "rl+terminal" if controllers else "rl",
+        "terminal_config": asdict(terminal_cfg) if terminal_cfg else None,
+        "planner_map_source": (
+            "native_collision_geometry_and_gazebo_object_poses" if controllers else None
+        ),
         "metrics": metrics,
         "episodes": results,
         "stochastic": stochastic,
@@ -139,7 +185,12 @@ def main():
     p.add_argument("--stochastic", action="store_true")
     p.add_argument("--device", default="cpu")
     p.add_argument("--output", type=Path)
+    add_terminal_arguments(p)
     args = p.parse_args()
+    try:
+        terminal_cfg = terminal_config(args)
+    except ValueError as exc:
+        p.error(str(exc))
     if args.episodes < 1 or args.num_envs < 1:
         p.error("Episode and environment counts must be positive")
     torch.set_num_threads(2)
@@ -159,10 +210,16 @@ def main():
             env,
             list(range(args.seed, args.seed + args.episodes)),
             stochastic=args.stochastic,
+            terminal_cfg=terminal_cfg,
         )
-        path = args.output or args.checkpoint.with_suffix(
-            ".stochastic.json" if args.stochastic else ".deterministic.json"
-        )
+        result["checkpoint"] = str(args.checkpoint)
+        result["checkpoint_sha256"] = hashlib.sha256(
+            args.checkpoint.read_bytes()
+        ).hexdigest()
+        result["world"] = cfg.world
+        mode = ".stochastic" if args.stochastic else ".deterministic"
+        suffix = mode + (".hybrid" if terminal_cfg else "") + ".json"
+        path = args.output or args.checkpoint.with_suffix(suffix)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result["metrics"], indent=2), flush=True)

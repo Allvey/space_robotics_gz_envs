@@ -95,10 +95,56 @@ uv run --frozen python -m space_robotics_nav.play \
 ```
 
 绿色标记表示目标，橙色条表示要求的最终朝向。默认使用确定性策略、1 倍速度，
-自动切换回合；关闭窗口或 Ctrl+C 结束。可用 `--stochastic`、`--episodes 3`、
-`--speed 0.5`，无 NVIDIA 容器图形支持时可用 `--software-rendering`。
+连续生成 10 个随机目标；每次启动使用新的随机运行种子，并在控制台打印该种子。
+到达或超时后从车辆当前位置生成下一个目标；碰撞、越界、翻倒或附近无有效目标时恢复出生点。
+摄像机默认跟随原机器人，绿色目标标记随任务更新；关闭窗口或 Ctrl+C 可提前结束。
+可用 `--goals 0` 无限连续导航、`--goals 10` 指定目标数量（`--episodes` 是同义参数），
+`--seed 30002` 固定种子复现、`--reset-between-goals` 恢复每段任务独立重置的播放方式。
+`--fixed-camera` 关闭自动跟随，`--output logs/navigation/playback.json` 保存逐目标记录。
+另有 `--stochastic`、`--speed 0.5`，无 NVIDIA 容器图形支持时可用 `--software-rendering`。
 界面沿用原场景光照和材质；目标注记没有碰撞体。
 不需要先运行 `.docker/local.bash`；原手动部署入口仍可单独使用。
+
+连续播放增补后，**69 项测试通过**。实际 GUI 使用原 9 m 目标、150 s 时限完成了
+10 个不同目标的切换，正常切换前后位置差不超过 6.3 mm，并触发了翻倒和碰撞后的恢复。
+该试玩中 2 个目标成功、8 个失败；这验证的是连续播放流程，不能替代独立种子的模型评估。
+完整逐目标记录见 [连续播放验证](navigation_playback_validation.json)。
+
+### 近目标 RS／差速规划接管
+
+已有模型可以直接启用近目标规划，无需重新训练：
+
+```bash
+uv run --frozen python -m space_robotics_nav.play \
+  logs/navigation/moon_v2_native_std_16env_seed42/final.pt \
+  --device cuda:0 --goals 10 --terminal-planner
+```
+
+默认在距离目标 2 m 内尝试接管；生成完整目标位姿的 RS 和差速候选路径，使用原场景
+碰撞几何检查后低速跟踪。最后 0.6 m 转入带转动中心反馈补偿的差速停靠。
+控制台 `mode=rl`／`terminal_rs`／`terminal_diff-drive` 显示当前控制来源。
+原位置和朝向成功条件均保留。未启用 `--terminal-planner` 时仍为纯 RL。
+上述命令每次启动随机生成一组新目标；只复现先前的单个成功案例时，添加
+`--seed 30002 --goals 1`。连续播放每段保留原目标距离和随机最终朝向，
+但后续起点来自车辆实际位置；它与固定出生点的独立回合评估分别使用。
+
+```bash
+# 同一模型、相同种子评估混合导航，和上面的纯 RL 评估分别保存
+uv run --frozen python -m space_robotics_nav.evaluate \
+  logs/navigation/moon_v2_native_std_16env_seed42/final.pt \
+  --device cuda:0 --episodes 8 --seed 30000 --num-envs 4 \
+  --terminal-planner --output logs/navigation/terminal_hybrid.json
+```
+
+可设置 `--terminal-distance 1.5 --terminal-exit-distance 2.5`；退出距离必须大于进入距离。
+`--terminal-family auto` 默认比较 RS 与差速候选；`rs` 或 `diff-drive` 限制接近阶段的
+候选族。最后的差速停靠控制均保留。半径通过 `--terminal-radius` 设置，默认 0.6 m，
+是规划参数，不修改原机器人。评估 JSON 记录控制来源、完整配置、接管／回退／失败次数、
+最终朝向误差和 checkpoint SHA-256；混合结果默认另存为 `*.deterministic.hybrid.json`。
+
+该模块额外读取原场景局部碰撞几何和 Gazebo 位姿，混合导航成功率属于系统性能。
+训练过程仍完全使用原 RL 链路，不将规划动作混入 PPO rollout。
+实现、边界和实测结果见 [近目标规划说明](NAVIGATION_TERMINAL.md)。
 
 ## 单独评估
 

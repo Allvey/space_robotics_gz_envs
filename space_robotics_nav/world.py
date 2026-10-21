@@ -102,8 +102,7 @@ def runtime_world(cfg, *, gui=False):
     for include, model in zip(world.findall("include"), spec["models"]):
         include.find("uri").text = model["path"]
     if gui:
-        marker = ET.fromstring(
-            """<model name="navigation_goal"><static>true</static>
+        marker = ET.fromstring("""<model name="navigation_goal"><static>true</static>
           <pose>0 0 -100 0 0 0</pose><link name="annotation">
           <visual name="goal"><pose>0 0 0.7 0 0 0</pose>
           <geometry><cylinder><radius>0.05</radius><length>1.4</length></cylinder></geometry>
@@ -111,8 +110,7 @@ def runtime_world(cfg, *, gui=False):
           <visual name="heading"><pose>0.4 0 0.15 0 0 0</pose>
           <geometry><box><size>0.8 0.08 0.08</size></box></geometry>
           <material><diffuse>1 0.4 0 1</diffuse><emissive>0.7 0.2 0 1</emissive></material></visual>
-          </link></model>"""
-        )
+          </link></model>""")
         world.append(marker)
     folder = ROOT / ".cache/navigation/worlds"
     folder.mkdir(parents=True, exist_ok=True)
@@ -122,7 +120,7 @@ def runtime_world(cfg, *, gui=False):
     return path
 
 
-def gui_config(cfg, path, origin, goal):
+def gui_config(cfg, path, origin, goal, *, follow=False):
     # Reuse the original lighting/render settings; frame both rover and goal.
     original = (
         ET.parse(ROOT / "worlds" / f"{cfg.world}.sdf").getroot().find("world/gui")
@@ -153,6 +151,12 @@ def gui_config(cfg, path, origin, goal):
         "SelectEntities",
     ):
         p = ET.Element("plugin", filename=name, name=name)
+        if name == "CameraTracking" and follow:
+            ET.SubElement(p, "follow_target").text = describe(cfg.world, cfg.assets)[
+                "robot"
+            ]["name"]
+            ET.SubElement(p, "follow_offset").text = "-10 -10 10"
+            ET.SubElement(p, "follow_pgain").text = "0.05"
         g = ET.SubElement(p, "gz-gui")
         for key, kind, value in (
             ("state", "string", "floating"),

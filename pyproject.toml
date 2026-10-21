@@ -8,9 +8,17 @@ version = "0.2.0"
 description = "RLRoverLab navigation algorithms on native Space Robotics Gazebo worlds"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-  "torch==2.11.0", "skrl==2.1.0", "gymnasium==1.2.1", "numpy==2.3.1",
-  "scipy==1.17.0", "warp-lang==1.13.0", "trimesh==4.11.1",
-  "PyYAML==6.0.3", "tensorboard==2.21.0", "opencv-python-headless==4.13.0.90",
+  "torch==2.11.0",
+  "skrl==2.1.0",
+  "gymnasium==1.2.1",
+  "numpy==2.3.1",
+  "scipy==1.17.0",
+  "warp-lang==1.13.0",
+  "trimesh==4.11.1",
+  "PyYAML==6.0.3",
+  "tensorboard==2.21.0",
+  "opencv-python-headless==4.13.0.90",
+  "pycollada==0.9.3",
 ]
 
 [project.optional-dependencies]
@@ -23,6 +31,9 @@ rover-play = "space_robotics_nav.play:main"
 
 [tool.setuptools.packages.find]
 include = ["space_robotics_nav*"]
+
+[tool.setuptools.package-data]
+"space_robotics_nav.planning" = ["LICENSE.PythonRobotics"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests/navigation"]

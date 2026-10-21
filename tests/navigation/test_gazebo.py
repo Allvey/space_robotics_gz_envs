@@ -153,3 +153,77 @@ def test_vector_autoreset_timeout_with_real_ppo(tmp_path):
         assert all(torch.isfinite(p).all() for p in agent.policy.parameters())
     finally:
         env.close()
+
+
+def test_terminal_controller_on_native_moon_pose_fixture():
+    from space_robotics_nav.planning.paths import wrap
+    from space_robotics_nav.planning.terminal import TerminalController
+
+    env = NavigationEnv(NavigationConfig())
+    try:
+        env.reset(seed=30002)
+        yaw = env.state["rpy"][2]
+        # Short synthetic task ONLY for controller integration; performance
+        # evaluation retains the original nine-metre targets and random headings.
+        env.target[:2] = np.asarray(env.state["position"][:2]) + 0.5 * np.array(
+            [np.cos(yaw), np.sin(yaw)]
+        )
+        env.target_heading = wrap(yaw + 0.2)
+        env._command()
+        controller = TerminalController(env)
+        for _ in range(150):
+            action = controller.action([0, 0])
+            assert abs(action[0]) <= 0.250001 and abs(action[1]) <= 0.600001
+            _, _, terminated, truncated, info = env.step(action)
+            if terminated or truncated:
+                break
+        assert controller.stats["handoffs"] > 0
+        assert info["success"] and not info["collision"]
+        assert info["distance"] < 0.18 and info["heading_error"] < 0.1
+    finally:
+        env.close()
+
+
+def test_ten_continuous_goals_preserve_native_rover_and_object_state():
+    from unittest.mock import patch
+
+    from space_robotics_nav.playback import PlaybackEnv, advance_goal
+
+    # Short task duration tests switching only, not learned navigation performance.
+    env = PlaybackEnv(NavigationConfig(episode_seconds=0.4))
+    targets = []
+    try:
+        with patch.object(env.backend, "reset", wraps=env.backend.reset) as reset:
+            env.reset(seed=30002)
+            for index in range(10):
+                targets.append(env.target.copy())
+                assert np.linalg.norm(env.target[:2] - env.origin[:2]) == pytest.approx(
+                    9, abs=1e-5
+                )
+                # The first native reset settles physically and may drift a few
+                # centimetres; continuous goals use the already settled pose.
+                if index:
+                    assert env.initial_distance == pytest.approx(9, abs=1e-5)
+                for _ in range(2):
+                    _, _, terminated, truncated, info = env.step([0, 0])
+                assert truncated and not terminated
+                if index == 9:
+                    break
+                position = np.array(env.state["position"])
+                iterations = env.state["iterations"]
+                obs, mode = advance_goal(
+                    env, info, seed=30003 + index, previous_targets=targets
+                )
+                assert mode == "continue_from_current_pose" and obs.shape == (10206,)
+                assert np.isfinite(obs).all() and not env.done
+                assert env.state["iterations"] == iterations + env.backend.decimation
+                assert np.linalg.norm(env.origin - position) < 0.2
+                assert int(env.episode_length_buf[0]) == 0 and env.episode_return == 0
+                assert reset.call_count == 1
+            assert len(targets) == 10
+            for i, target in enumerate(targets):
+                assert all(
+                    np.linalg.norm(target[:2] - other[:2]) >= 1 for other in targets[:i]
+                )
+    finally:
+        env.close()

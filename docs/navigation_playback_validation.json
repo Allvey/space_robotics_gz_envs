@@ -1,0 +1,472 @@
+{
+  "created_utc": "2026-10-21T05:18:34.721744+00:00",
+  "scope": "Continuous GUI navigation, target switching and failure recovery; not an independent-episode model performance benchmark.",
+  "tests": {
+    "command": "RUN_GAZEBO_TESTS=1 uv run --frozen --extra test pytest tests/navigation -q",
+    "passed": 69,
+    "result": ".....................................................................    [100%]\n69 passed in 85.93s (0:01:25)"
+  },
+  "gui_validation": {
+    "checkpoint": "logs/navigation/moon_v2_native_std_16env_seed42/final.pt",
+    "run_seed": 30002,
+    "requested_goals": 10,
+    "continuous": true,
+    "terminal_planner": true,
+    "goals": [
+      {
+        "index": 1,
+        "seed": 30002,
+        "target": [
+          10.113889083226862,
+          5.3878251511279664,
+          0.5615224838256836
+        ],
+        "target_heading": 0.6743718581336,
+        "start_position": [
+          1.1706967793820098,
+          6.140767151984043,
+          1.5376786144495376
+        ],
+        "end_position": [
+          10.020365675596045,
+          5.27671187080342,
+          0.4614382191542201
+        ],
+        "transition": "initial_reset",
+        "return": 1.5669666888760636,
+        "length": 236,
+        "success": true,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 0.14523357152938843,
+        "distance_progress": 8.829598009586334,
+        "min_distance": 0.14523357152938843,
+        "position_reached": true,
+        "reward_terms": {
+          "distance_to_target": 0.14030284046020824,
+          "reached_target": 1.3706666231155396,
+          "oscillation": -0.0001583896765717974,
+          "angle_to_target": 0.0,
+          "heading_soft_contraint": 0.0,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.05615561497688759
+        },
+        "heading_error": 0.038771435618400574
+      },
+      {
+        "index": 2,
+        "seed": 30003,
+        "target": [
+          2.811445305061169,
+          10.660839844704235,
+          2.020444393157959
+        ],
+        "target_heading": 1.4618320566489542,
+        "start_position": [
+          10.025717852116127,
+          5.2799224864084255,
+          0.46083583249635274
+        ],
+        "end_position": [
+          2.1758987656944977,
+          10.691456690949034,
+          2.1578626546954003
+        ],
+        "transition": "continue_from_current_pose",
+        "return": 0.6877598721166863,
+        "length": 750,
+        "success": false,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 0.6362835764884949,
+        "distance_progress": 8.363716423511505,
+        "min_distance": 0.5104362964630127,
+        "position_reached": false,
+        "reward_terms": {
+          "distance_to_target": 0.5769153321889462,
+          "reached_target": 0.0,
+          "oscillation": -8.845403834518706e-06,
+          "angle_to_target": -0.07662537067662928,
+          "heading_soft_contraint": 0.0,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.18747875600820407
+        },
+        "heading_error": 0.407541424036026
+      },
+      {
+        "index": 3,
+        "seed": 30004,
+        "target": [
+          -1.5936943035014295,
+          -3.4398137612827373,
+          0.02021932601928711
+        ],
+        "target_heading": 2.3808135181763506,
+        "start_position": [
+          -4.598091302320642,
+          4.98756186164747,
+          0.8108464376489655
+        ],
+        "end_position": [
+          -0.25882157534111055,
+          -2.423795650513255,
+          0.1475293134036526
+        ],
+        "transition": "reset_tipped_rover",
+        "return": -0.4443365094938909,
+        "length": 316,
+        "success": false,
+        "collision": true,
+        "out_of_bounds": false,
+        "distance": 1.6775511503219604,
+        "distance_progress": 7.269351124763489,
+        "min_distance": 1.6775511503219604,
+        "position_reached": false,
+        "reward_terms": {
+          "distance_to_target": 0.1351215959584806,
+          "reached_target": 0.0,
+          "oscillation": -2.1260824123636728e-06,
+          "angle_to_target": 0.0,
+          "heading_soft_contraint": 0.0,
+          "collision": -0.6000000000000001,
+          "far_from_target": 0.0,
+          "angle_diff": 0.020544020630040905
+        },
+        "heading_error": 2.26413631439209
+      },
+      {
+        "index": 4,
+        "seed": 30005,
+        "target": [
+          -2.351173022754373,
+          9.066403925693411,
+          1.8168973922729492
+        ],
+        "target_heading": 1.5421770668575174,
+        "start_position": [
+          5.1835983102323615,
+          4.075950016583605,
+          1.0926834265478358
+        ],
+        "end_position": [
+          -0.27280988918083,
+          6.175135377593808,
+          1.7762080894317591
+        ],
+        "transition": "reset_after_failure",
+        "return": 0.37421643674377936,
+        "length": 750,
+        "success": false,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 3.560762405395508,
+        "distance_progress": 5.47679328918457,
+        "min_distance": 3.3669447898864746,
+        "position_reached": false,
+        "reward_terms": {
+          "distance_to_target": 0.3225520620762836,
+          "reached_target": 0.0,
+          "oscillation": -2.134513498514679e-05,
+          "angle_to_target": -0.028967112000100312,
+          "heading_soft_contraint": 0.0,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.0806528318025812
+        },
+        "heading_error": 1.191604733467102
+      },
+      {
+        "index": 5,
+        "seed": 30006,
+        "target": [
+          -6.965598279532827,
+          -1.7372775598583399,
+          0.017811298370361328
+        ],
+        "target_heading": -2.8131626560021443,
+        "start_position": [
+          1.6380328963165776,
+          0.6293965310925532,
+          0.7237383950955146
+        ],
+        "end_position": [
+          -6.9539421980222045,
+          -1.849690191025825,
+          -0.10928651153854142
+        ],
+        "transition": "reset_tipped_rover",
+        "return": 1.3084028673339154,
+        "length": 397,
+        "success": true,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 0.1130153238773346,
+        "distance_progress": 8.810191005468369,
+        "min_distance": 0.05174259841442108,
+        "position_reached": true,
+        "reward_terms": {
+          "distance_to_target": 0.2954504149820423,
+          "reached_target": 0.9413333535194397,
+          "oscillation": -0.0025689415230779923,
+          "angle_to_target": -0.057566319848410784,
+          "heading_soft_contraint": -0.0022666666423901915,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.13402102684631245
+        },
+        "heading_error": 0.08589782565832138
+      },
+      {
+        "index": 6,
+        "seed": 30007,
+        "target": [
+          -1.1817132413559621,
+          5.054962894073053,
+          1.3054275512695312
+        ],
+        "target_heading": -2.8502971088919167,
+        "start_position": [
+          -6.953514537773184,
+          -1.850564587204281,
+          -0.1093561281581102
+        ],
+        "end_position": [
+          -0.5856464801390059,
+          5.574848861332053,
+          1.3901527283784918
+        ],
+        "transition": "continue_from_current_pose",
+        "return": 0.8301550358670647,
+        "length": 750,
+        "success": false,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 0.7909342646598816,
+        "distance_progress": 8.209065735340118,
+        "min_distance": 0.7909342646598816,
+        "position_reached": false,
+        "reward_terms": {
+          "distance_to_target": 0.6971308075953857,
+          "reached_target": 0.0,
+          "oscillation": -1.860948541434482e-06,
+          "angle_to_target": -0.019718886888585987,
+          "heading_soft_contraint": 0.0,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.15274497610880644
+        },
+        "heading_error": 1.5162540674209595
+      },
+      {
+        "index": 7,
+        "seed": 30008,
+        "target": [
+          -7.514929298008834,
+          11.318490119177056,
+          1.4482636451721191
+        ],
+        "target_heading": 0.5662219281890408,
+        "start_position": [
+          -0.5858899383000266,
+          5.574936032062861,
+          1.389697988126551
+        ],
+        "end_position": [
+          -0.7338495075416887,
+          5.548219012517755,
+          1.350103340428994
+        ],
+        "transition": "continue_from_current_pose",
+        "return": 0.14631283185620647,
+        "length": 750,
+        "success": false,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 8.903879165649414,
+        "distance_progress": 0.09612083435058594,
+        "min_distance": 8.903879165649414,
+        "position_reached": false,
+        "reward_terms": {
+          "distance_to_target": 0.10190839784627315,
+          "reached_target": 0.0,
+          "oscillation": -1.3979090601878855e-06,
+          "angle_to_target": 0.0,
+          "heading_soft_contraint": 0.0,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.0444058319189935
+        },
+        "heading_error": 1.1758828163146973
+      },
+      {
+        "index": 8,
+        "seed": 30009,
+        "target": [
+          -2.8725565201769205,
+          -3.1940133016087273,
+          -0.019863128662109375
+        ],
+        "target_heading": -0.6214320372151017,
+        "start_position": [
+          -0.7342648658177898,
+          5.548280951097372,
+          1.3499068495363977
+        ],
+        "end_position": [
+          -0.9035474328600455,
+          5.532712928917515,
+          1.324167181418348
+        ],
+        "transition": "continue_from_current_pose",
+        "return": -0.6992081287863453,
+        "length": 750,
+        "success": false,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 8.946102142333984,
+        "distance_progress": 0.053897857666015625,
+        "min_distance": 8.946102142333984,
+        "position_reached": false,
+        "reward_terms": {
+          "distance_to_target": 0.10135048066149466,
+          "reached_target": 0.0,
+          "oscillation": -3.558367687787723e-05,
+          "angle_to_target": -0.8306015572976314,
+          "heading_soft_contraint": 0.0,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.030078531526669394
+        },
+        "heading_error": 2.281602144241333
+      },
+      {
+        "index": 9,
+        "seed": 30010,
+        "target": [
+          6.250608727833586,
+          10.989819112216018,
+          2.053953170776367
+        ],
+        "target_heading": 2.94837994888025,
+        "start_position": [
+          -0.9049872706936347,
+          5.531115428569027,
+          1.3235200801515759
+        ],
+        "end_position": [
+          -1.0968227586101997,
+          5.551558790072672,
+          1.301279669539005
+        ],
+        "transition": "continue_from_current_pose",
+        "return": 0.1407885660159809,
+        "length": 750,
+        "success": false,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 9.141083717346191,
+        "distance_progress": -0.1410837173461914,
+        "min_distance": 8.998830795288086,
+        "position_reached": false,
+        "reward_terms": {
+          "distance_to_target": 0.09922150569036603,
+          "reached_target": 0.0,
+          "oscillation": -2.7856108499690895e-06,
+          "angle_to_target": 0.0,
+          "heading_soft_contraint": 0.0,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.041569845936464844
+        },
+        "heading_error": 1.467392086982727
+      },
+      {
+        "index": 10,
+        "seed": 30011,
+        "target": [
+          7.478844248297114,
+          2.820688464637643,
+          0.7878451347351074
+        ],
+        "target_heading": -1.1775747172764555,
+        "start_position": [
+          -1.0968392138170107,
+          5.551558867571895,
+          1.3013301513543418
+        ],
+        "end_position": [
+          -1.1779957693367862,
+          5.568210643625262,
+          1.2960951035329238
+        ],
+        "transition": "continue_from_current_pose",
+        "return": 0.12745125358138465,
+        "length": 750,
+        "success": false,
+        "collision": false,
+        "out_of_bounds": false,
+        "distance": 9.08238697052002,
+        "distance_progress": -0.08238697052001953,
+        "min_distance": 9.0,
+        "position_reached": false,
+        "reward_terms": {
+          "distance_to_target": 0.09990264230873436,
+          "reached_target": 0.0,
+          "oscillation": -6.322849367279561e-07,
+          "angle_to_target": 0.0,
+          "heading_soft_contraint": 0.0,
+          "collision": 0.0,
+          "far_from_target": 0.0,
+          "angle_diff": 0.027549243557587033
+        },
+        "heading_error": 2.5765795707702637
+      }
+    ],
+    "speed": 1000,
+    "episode_seconds": 150,
+    "target_distance": 9,
+    "distinct_targets": 10,
+    "minimum_target_separation_m": 1.3022697244488584,
+    "camera_following": true,
+    "normal_transitions": [
+      {
+        "goal": 2,
+        "gap_from_previous_end_m": 0.006270304278964567
+      },
+      {
+        "goal": 6,
+        "gap_from_previous_end_m": 0.0009758629202970577
+      },
+      {
+        "goal": 7,
+        "gap_from_previous_end_m": 0.0005231245637631055
+      },
+      {
+        "goal": 8,
+        "gap_from_previous_end_m": 0.00046364593823723427
+      },
+      {
+        "goal": 9,
+        "gap_from_previous_end_m": 0.0022458584995304672
+      },
+      {
+        "goal": 10,
+        "gap_from_previous_end_m": 5.309607816989192e-05
+      }
+    ],
+    "successes": 2
+  },
+  "randomness": "Default run seed uses fresh system entropy. Explicit seed 30002 used in this GUI verification for reproducibility; unit tests cover fresh/default and explicit seeds.",
+  "native_continuity_test": "Ten short synthetic goals, one initial native reset only, exact physical iteration increments on normal transitions. Tests switching only, not model performance.",
+  "source_sha256": {
+    "space_robotics_nav/play.py": "ae244788058ca75ca50759344a869fafbfe30621a8b10e64cb5a7d01cb55afaa",
+    "space_robotics_nav/playback.py": "204d7b599066b8c0024597c4252c6eed65db0f9d7f9c5891be913c5496d08123",
+    "space_robotics_nav/world.py": "6912137719ddca3290a55c1644fafe9dadc90e1399193557a59b138c8a6322a4",
+    "space_robotics_nav/env.py": "d8e4ba24208c18cd0f631abbb732dfa2154c85c8b056e4447ef269f7f7a4e4fd",
+    "worlds/moon.sdf": "71eefd82f0e3fced520a95476d0f8efcb4ff4cf376877165ba80d168fbfb4775",
+    "worlds/mars.sdf": "33ad81d3230c6940e26ecba3849fa8d21b0dadd6df6eab94099d59d5525ba772"
+  },
+  "checkpoint_sha256": "b79969cf65e42d706e88ef2a6c1d923092bc2456666cddd7ecee52cd02790b60"
+}

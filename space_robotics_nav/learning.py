@@ -104,14 +104,21 @@ def create_agent(env, experiment, *, directory, evaluation=False):
     )
 
 
-def policy_action(agent, observations, stochastic=False):
+def policy_action(agent, observations, stochastic=False, *, generator=None):
     with torch.inference_mode():
         means, output = agent.policy.compute(
             {"observations": observations}, role="policy"
         )
         if stochastic:
             return (
-                means + torch.randn_like(means) * output["log_std"].clamp(-20, 2).exp()
+                means
+                + torch.randn(
+                    means.shape,
+                    dtype=means.dtype,
+                    device=means.device,
+                    generator=generator,
+                )
+                * output["log_std"].clamp(-20, 2).exp()
             )
         return means
 
