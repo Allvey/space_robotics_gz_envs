@@ -56,6 +56,8 @@ class GazeboVectorEnv(Wrapper):
         return self.latest, {}
 
     def step(self, actions):
+        requested = actions.detach().cpu().numpy()
+
         def one(pair):
             env, action = pair
             obs, reward, terminated, truncated, info = env.step(action)
@@ -64,14 +66,30 @@ class GazeboVectorEnv(Wrapper):
                 obs, _ = env.reset()
             return obs, reward, terminated, truncated, info
 
-        result = list(
-            self.pool.map(one, zip(self.envs, actions.detach().cpu().numpy()))
-        )
+        result = list(self.pool.map(one, zip(self.envs, requested)))
         obs, reward, terminated, truncated, infos = zip(*result)
         episodes = [i["episode"] for i in infos if "episode" in i]
         self.episodes.extend(episodes)
         self.latest = torch.as_tensor(np.stack(obs), device=self.device)
-        log = {}
+        log = {
+            f"Reward terms/{name}": torch.tensor(
+                np.mean([info["reward_terms"][name] for info in infos]),
+                device=self.device,
+            )
+            for name in infos[0]["reward_terms"]
+        }
+        limits = self.envs[0].backend.spec["robot"]["limits"]
+        for axis, name in enumerate(("linear", "angular")):
+            log[f"Action/{name} requested mean"] = torch.tensor(
+                requested[:, axis].mean(), device=self.device
+            )
+            log[f"Action/{name} limit exceeded fraction"] = torch.tensor(
+                np.mean(
+                    (requested[:, axis] < limits[f"min_{name}_velocity"])
+                    | (requested[:, axis] > limits[f"max_{name}_velocity"])
+                ),
+                device=self.device,
+            )
         if episodes:
             for name in (
                 "return",
@@ -80,6 +98,8 @@ class GazeboVectorEnv(Wrapper):
                 "collision",
                 "distance",
                 "distance_progress",
+                "min_distance",
+                "position_reached",
                 "out_of_bounds",
             ):
                 log[f"Episode/{name}"] = torch.tensor(

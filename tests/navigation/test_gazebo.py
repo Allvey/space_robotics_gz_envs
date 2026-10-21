@@ -98,3 +98,58 @@ def test_obstacle_contact_feedback_and_visual_annotation():
         assert np.linalg.norm(state["obstacle_forces"]) == 0
     finally:
         backend.close()
+
+
+def test_vector_autoreset_timeout_with_real_ppo(tmp_path):
+    from space_robotics_nav.learning import create_agent, load_config
+    from space_robotics_nav.vector_env import GazeboVectorEnv
+
+    torch.set_num_threads(2)
+    # Shorten only the test's episode duration so the native timeout is exercised.
+    env = GazeboVectorEnv(NavigationConfig(episode_seconds=0.4), num_envs=2)
+    try:
+        cfg = load_config()
+        cfg["agent"].update(rollouts=2, mini_batches=1, learning_epochs=1)
+        cfg["agent"]["experiment"].update(write_interval=0, checkpoint_interval=0)
+        agent = create_agent(env, cfg, directory=tmp_path)
+        agent.init()
+        agent.enable_training_mode(True)
+        obs, _ = env.reset_seeds([41000, 41001])
+        for step in range(2):
+            with torch.no_grad():
+                actions, _ = agent.act(obs, None, timestep=step, timesteps=2)
+            next_obs, reward, terminated, truncated, info = env.step(actions)
+            if step == 1:
+                assert truncated.all() and not terminated.any()
+                for index, item in enumerate(info["individual"]):
+                    assert item["episode"]["length"] == 2
+                    assert (
+                        item["episode"]["min_distance"] <= item["episode"]["distance"]
+                    )
+                    assert not item["episode"]["position_reached"]
+                    assert not np.allclose(
+                        item["final_observation"], next_obs[index].numpy()
+                    )
+                assert "Reward terms/oscillation" in info["log"]
+                assert "Action/linear limit exceeded fraction" in info["log"]
+            agent.record_transition(
+                observations=obs,
+                states=None,
+                actions=actions,
+                rewards=reward,
+                next_observations=next_obs,
+                next_states=None,
+                terminated=terminated,
+                truncated=truncated,
+                infos=info,
+                timestep=step,
+                timesteps=2,
+            )
+            obs = next_obs
+        agent.enable_models_training_mode(True)
+        assert abs(agent.rollout_kl()) < 1e-7
+        agent.update(timestep=1, timesteps=2)
+        assert agent.tracking_data["Optimization / Gradient steps"][-1] == 1
+        assert all(torch.isfinite(p).all() for p in agent.policy.parameters())
+    finally:
+        env.close()

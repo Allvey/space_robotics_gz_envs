@@ -76,7 +76,9 @@ def test_snapshot_and_model_architecture():
         ast.dump(n) for n in tree.body if isinstance(n, ast.ClassDef)
     ]
     assert classes(upstream) == classes(ported)
-    assert load_config() == __import__("yaml").safe_load(
+    assert load_config(ROOT / "configs/navigation/ppo.yaml") == __import__(
+        "yaml"
+    ).safe_load(
         (
             SOURCE / "rover_envs/envs/navigation/learning/skrl/configs/rover_ppo.yaml"
         ).read_text()

@@ -1,0 +1,8 @@
+# Keep the pinned upstream configuration intact for baseline comparisons.
+extends: ppo.yaml
+adaptation:
+  version: 2
+  target_minibatch_samples: 128
+agent:
+  mini_batches: auto
+  time_limit_bootstrap: true

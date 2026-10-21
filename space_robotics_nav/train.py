@@ -12,7 +12,14 @@ from skrl.utils import set_seed
 
 from .config import CONTRACT, UPSTREAM_COMMIT, NavigationConfig
 from .evaluate import compare, evaluate, read_run
-from .learning import create_agent, load_config, restore_state, save_state
+from .learning import (
+    adaptation_version,
+    create_agent,
+    load_config,
+    minibatch_count,
+    restore_state,
+    save_state,
+)
 from .vector_env import GazeboVectorEnv
 from .world import describe
 
@@ -36,7 +43,7 @@ def main():
     p.add_argument(
         "--mini-batches",
         type=int,
-        help="Explicit override; upstream default remains 60",
+        help="Override: v2 auto targets 128 samples per minibatch; v1 uses 60 minibatches",
     )
     p.add_argument(
         "--eval-episodes",
@@ -73,8 +80,14 @@ def main():
         ):
             p.error("mini-batches must fit the rollout sample count")
         experiment["agent"]["mini_batches"] = args.mini_batches
+    experiment["agent"]["mini_batches"] = minibatch_count(experiment, args.num_envs)
     if args.checkpoint:
         previous = read_run(args.checkpoint)
+        if adaptation_version(previous["experiment"]) != adaptation_version(experiment):
+            p.error(
+                "Resume requires the same adaptation version. Start v2 from scratch; "
+                "use --config configs/navigation/ppo.yaml to resume the legacy baseline."
+            )
         if (
             previous["environment"]["world"] != cfg.world
             or previous["world"]["sha256"] != spec["sha256"]

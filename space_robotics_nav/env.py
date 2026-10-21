@@ -128,6 +128,7 @@ class NavigationEnv(gym.Env):
         self.reward_totals = {name: 0.0 for name in REWARDS}
         self._command()
         self.initial_distance = float(torch.linalg.vector_norm(self.command[0, :2]))
+        self.min_distance = self.initial_distance
         self.done = False
         return self._observation(), {}
 
@@ -176,6 +177,7 @@ class NavigationEnv(gym.Env):
             self.reward_totals[name] += value
         self._command()
         distance = float(torch.linalg.vector_norm(self.command[0, :2]))
+        self.min_distance = min(self.min_distance, distance)
         self.done = terminated or truncated
         info = {
             "success": success,
@@ -197,6 +199,8 @@ class NavigationEnv(gym.Env):
                 "out_of_bounds": out_of_bounds,
                 "distance": distance,
                 "distance_progress": self.initial_distance - distance,
+                "min_distance": self.min_distance,
+                "position_reached": self.min_distance < self.cfg.success_distance,
                 "reward_terms": self.reward_totals.copy(),
             }
         return self._observation(), reward, terminated, truncated, info

@@ -68,6 +68,8 @@ def evaluate(agent, env, seeds, *, stochastic=False, action_seed=12345):
             "length",
             "distance",
             "distance_progress",
+            "min_distance",
+            "position_reached",
         )
     }
     metrics["return_per_step"] = sum(r["return"] for r in results) / sum(
@@ -88,11 +90,14 @@ def compare(before, after):
         raise ValueError("Evaluation seeds must match")
     rng = np.random.default_rng(8273)
     result = {}
-    for key, scale in (("return", False), ("step_return", True)):
+    comparisons = [("return", "return", False), ("step_return", "return", True)]
+    if all("distance_progress" in row for row in [*pre.values(), *post.values()]):
+        comparisons.append(("distance_progress", "distance_progress", False))
+    for key, field, scale in comparisons:
         delta = np.array(
             [
-                post[s]["return"] / (post[s]["length"] if scale else 1)
-                - pre[s]["return"] / (pre[s]["length"] if scale else 1)
+                post[s][field] / (post[s]["length"] if scale else 1)
+                - pre[s][field] / (pre[s]["length"] if scale else 1)
                 for s in sorted(pre)
             ]
         )

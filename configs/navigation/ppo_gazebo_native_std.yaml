@@ -1,0 +1,5 @@
+# Controlled exploration experiment for the ORIGINAL DiffDrive velocity limits.
+# Gaussian std is half of the linear/angular velocity magnitude limits.
+extends: ppo_gazebo.yaml
+adaptation:
+  initial_action_std: [0.25, 0.5]
