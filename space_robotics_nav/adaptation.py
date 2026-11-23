@@ -1,8 +1,8 @@
 """Explicit training corrections around the unmodified upstream implementation."""
 
 import torch
-from skrl.agents.torch.ppo import PPO
 
+from .training_log import TrainingPPO
 from .vendor.models import GaussianPolicyConv, ValueNetworkConv
 
 
@@ -51,7 +51,7 @@ class NavigationValue(FrozenBatchNorm, ValueNetworkConv):
         return x, {}
 
 
-class NavigationPPO(PPO):
+class NavigationPPO(TrainingPPO):
     """Bootstrap timeouts from terminal observations and cut the GAE trace."""
 
     def record_transition(self, **transition):

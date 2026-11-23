@@ -138,6 +138,9 @@ class NavigationEnv(gym.Env):
         action = np.asarray(action, dtype=np.float32)
         if action.shape != (2,) or not np.isfinite(action).all():
             raise ValueError("Expected finite [linear, angular] action")
+        previous_distance = float(
+            np.linalg.norm(self.target[:2] - np.asarray(self.state["position"])[:2])
+        )
         self.action_manager.prev_action.copy_(self.action_manager.action)
         self.action_manager.action.copy_(torch.from_numpy(action)[None])
         self.state = self.backend.step(action)
@@ -177,14 +180,21 @@ class NavigationEnv(gym.Env):
             self.reward_totals[name] += value
         self._command()
         distance = float(torch.linalg.vector_norm(self.command[0, :2]))
+        yaw = self.state["rpy"][2] + self.terrain.spec["heading_offset"]
+        linear_speed = float(
+            np.dot(self.state["linear_velocity"][:2], [np.cos(yaw), np.sin(yaw)])
+        )
         self.min_distance = min(self.min_distance, distance)
         self.done = terminated or truncated
         info = {
+            "reward": reward,
             "success": success,
             "collision": collision,
             "far_from_target": far,
             "out_of_bounds": out_of_bounds,
             "distance": distance,
+            "approach_speed": (previous_distance - distance) / self.cfg.control_dt,
+            "linear_speed": linear_speed,
             "heading_error": abs(float(self.command[0, 3])),
             "reward_terms": terms,
             "sim_time": self.state["sim_time"],
@@ -198,6 +208,9 @@ class NavigationEnv(gym.Env):
                 "collision": collision,
                 "out_of_bounds": out_of_bounds,
                 "distance": distance,
+                "heading_error": info["heading_error"],
+                "far_from_target": far,
+                "timeout": truncated and not terminated,
                 "distance_progress": self.initial_distance - distance,
                 "min_distance": self.min_distance,
                 "position_reached": self.min_distance < self.cfg.success_distance,

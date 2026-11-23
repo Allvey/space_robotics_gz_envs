@@ -36,7 +36,7 @@ include = ["space_robotics_nav*"]
 "space_robotics_nav.planning" = ["LICENSE.PythonRobotics"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests/navigation"]
+testpaths = ["tests/navigation", "tests/models"]
 
 [tool.uv.sources]
 torch = { index = "pytorch-cu128" }

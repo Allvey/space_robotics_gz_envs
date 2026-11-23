@@ -29,6 +29,9 @@ https://github.com/user-attachments/assets/5345ebe2-5692-4df4-8bea-1967cc4a2aa1
 Navigation reinforcement learning on the original Gazebo robots and worlds is available through the
 [quick start below](#单车导航强化学习新增) and the [RLRoverLab algorithm migration guide](docs/NAVIGATION.md).
 
+基于原有 EXPLORER R2 改装的采矿车与运输车，见 [模型预览、启动与控制说明](docs/MINING_VEHICLES.md)。
+展示场景为 [`worlds/mining_vehicles.sdf`](worlds/mining_vehicles.sdf)。
+
 <details><summary><h3>Installation (Docker)</h3></summary>
 
 This section provides instructions for running the simulation within a Docker container. If you are using a different operating system than Ubuntu, you may need to adjust the following steps accordingly or refer to the official documentation for each step.
@@ -182,7 +185,7 @@ uv run --frozen python -m space_robotics_nav.train \
   --world moon \
   --num-envs 16 \
   --device cuda:0 \
-  --steps 50000 \
+  --iterations 834 \
   --seed 42 \
   --config configs/navigation/ppo_gazebo_native_std.yaml \
   --output logs/navigation/moon_single_run01
@@ -190,8 +193,12 @@ uv run --frozen python -m space_robotics_nav.train \
 
 `--num-envs` 表示独立世界数，默认值为 4。只需要一个训练世界时设为 `1`；
 增加该参数只增加并行采样，不会在同一世界生成多辆车。
-`--steps` 表示向量步数：16 个环境运行 50000 步，合计约 80 万条 transition，
-不是 50000 次 PPO 更新。PPO 每收集 60 个向量步执行一次更新，小批次数自动适配环境数量。
+`--iterations` 表示完整的 PPO 训练轮次，每轮先采样再更新策略。默认每轮采样 60 个
+向量步，因此 834 轮对应 50040 个向量步；16 环境共约 80 万条 transition，
+4 环境则约 20 万条。小批次数自动适配环境数量。
+兼容旧参数 `--steps`，但不能与 `--iterations` 同时使用；步数预算会向上补齐为完整轮次，
+例如 `--steps 50000` 实际执行 834 轮／50040 步，并在启动时说明。两者都不指定时，
+从配置文件的步数预算换算轮次。
 
 训练沿用原目标距离 9 m、随机目标朝向和 150 s 回合时限。
 成功条件为**距离 <0.18 m 且最终朝向误差 <0.1 rad**；RS 不参与训练。
@@ -201,15 +208,44 @@ uv run --frozen python -m space_robotics_nav.train \
 `initial.pt`、`final.pt` 保存初始和最终模型，定期模型位于 `ppo/checkpoints/agent_*.pt`。
 `best_agent.pt` 按训练回报选取，需结合成功率、距离进展和碰撞率判断导航能力。
 
+每轮 PPO 更新结束后，终端用分隔线逐行输出以下指标。采样指标统计本轮全部环境的
+全部采样，不依赖 episode 是否已经结束；每轮重新累计。
+
+| 指标 | 含义 |
+| --- | --- |
+| `iteration` | 已完成轮次／固定总轮次 |
+| `progress` | 按已完成轮次计算的进度 |
+| `elapsed_time` | 训练已用时间，时:分:秒 |
+| `estimated_remaining_time` | 按已完成轮次平均耗时估算的剩余时间，包含 PPO 更新耗时，不含最后保存与可选评估 |
+| `reward_mean` | 平均每步环境奖励，使用超时价值 bootstrap 前的原始奖励 |
+| `distance_to_goal_mean_m` | 本轮所有采样时刻的平均目标距离，米 |
+| `approach_speed_mean_mps` | 同一目标下距离减少量／控制周期的均值，米/秒；正值接近、负值远离，排除重置跳变 |
+| `linear_speed_mean_mps` | Gazebo 实测速度在车辆导航前向上的投影均值，米/秒，非动作请求值 |
+| `collision_step_rate` | 检测到岩石碰撞的采样数／本轮采样总数，显示百分比和计数 |
+| `success_count` | 本轮成功到达目标的次数 |
+
+例如 4 环境每轮 60 步，共 240 条采样。碰撞采样率与按已完成回合计算的碰撞率口径不同。
+每轮结果立即追加到 `iterations.jsonl`；每个已完成 episode 的累计奖励、最终／最近距离、
+成功／碰撞／越界与超时结果立即追加到 `episodes.jsonl`，训练正常结束时仍保存
+`training_episodes.json`。训练早期预计剩余时间可能波动；恢复训练时轮次和统计从本次运行重新计数。
+
 ### 查看训练曲线
 
 ```bash
 uv run --frozen tensorboard --logdir logs/navigation --port 6006
 ```
 
-浏览器打开 `http://localhost:6006`。优先查看 `Episode/success`、`Episode/distance_progress`
-与 `Episode/collision`，结合 `Episode/return` 或 `Reward / Total reward (mean)` 判断趋势。
-平均奖励上升需要结合成功率和碰撞率解读，不能单独作为导航性能提升的结论。
+浏览器打开 `http://localhost:6006`。新训练在 `ppo` 中以 **iteration** 为横轴，每轮更新后
+写入并刷新指标；优先查看 `Train/reward_mean`、`Train/distance_to_goal_mean_m`、
+`Train/approach_speed_mean_mps`、`Train/collision_step_rate` 和 `Train/success_count`。
+`Progress/` 显示进度与预计剩余秒数，策略／价值损失、KL、奖励分项和动作诊断也按 iteration 记录。
+
+完整回合数据保存在独立的 `episode_metrics` 中，以已完成 **episode 编号**为横轴，包含
+`Episode/return`、`Episode/distance`、`Episode/distance_progress`、`Episode/min_distance`、
+`Episode/success`、`Episode/collision`，以及累计的 `Episode/success_rate` 和
+`Episode/collision_rate`。尚无完整回合时不写回合指标，不用零值代替缺失数据。
+旧训练日志保留原有向量步横轴，与新训练直接比较时应注意单位差异。
+平均奖励上升需要结合目标距离、成功率和碰撞率解读，不能单独作为导航性能提升的结论。
 
 ### 在 Gazebo 中观看模型
 

@@ -4,11 +4,12 @@ from pathlib import Path
 
 import torch
 import yaml
-from skrl.agents.torch.ppo import PPO, PPO_CFG
+from skrl.agents.torch.ppo import PPO_CFG
 from skrl.memories.torch import RandomMemory
 
 from .adaptation import NavigationPolicy, NavigationPPO, NavigationValue
 from .config import ROOT
+from .training_log import TrainingPPO
 from .vendor import models as _models  # noqa: F401
 from .vendor.registry import MODEL_REGISTRY
 
@@ -92,7 +93,7 @@ def create_agent(env, experiment, *, directory, evaluation=False):
     if evaluation:
         cfg["rollouts"] = 1
         cfg["experiment"].update(write_interval=0, checkpoint_interval=0)
-    return (NavigationPPO if corrected else PPO)(
+    return (NavigationPPO if corrected else TrainingPPO)(
         models=models,
         memory=RandomMemory(
             memory_size=cfg["rollouts"], num_envs=env.num_envs, device=env.device

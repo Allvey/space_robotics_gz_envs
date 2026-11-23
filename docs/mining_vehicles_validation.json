@@ -1,0 +1,154 @@
+{
+  "passed": true,
+  "simulated_seconds": 29,
+  "settled": {
+    "lunar_excavator": {
+      "position": [
+        -0.0044203575634047905,
+        -0.8501880764713075,
+        0.3974690009889105
+      ],
+      "rpy": [
+        -1.7795818218663067e-07,
+        -0.012154761166135552,
+        -0.0005856462950061015
+      ],
+      "joints": {
+        "shoulder_yaw": -5.5767944135052165e-05,
+        "shoulder_pitch": 0.04810247382484474,
+        "elbow_pitch": 0.015720284190825818,
+        "bucket_pitch": 0.0023075037079958046
+      }
+    },
+    "lunar_hauler": {
+      "position": [
+        0.24548050279292602,
+        0.8497941634914314,
+        0.3974683272006892
+      ],
+      "rpy": [
+        -3.8140183441627714e-07,
+        -0.01215577163641317,
+        -0.0011036221248336112
+      ],
+      "joints": {
+        "bed_tilt": 5.67839689894313e-14,
+        "tailgate_hinge": -1.2405781697061278e-14
+      }
+    }
+  },
+  "travel_m": {
+    "lunar_excavator": 0.49949966201003076,
+    "lunar_hauler": 0.4994998557962814
+  },
+  "turn_rad": {
+    "lunar_excavator": 0.42123689504593437,
+    "lunar_hauler": 0.4212342190815767
+  },
+  "reached": {
+    "lunar_excavator": {
+      "position": [
+        0.45616117431531483,
+        -0.7194330267789057,
+        0.3974690715468667
+      ],
+      "rpy": [
+        2.4011657665457658e-08,
+        -0.01215474266591658,
+        0.42721354769963915
+      ],
+      "joints": {
+        "shoulder_yaw": 0.5113500600823124,
+        "shoulder_pitch": -0.19461276561626528,
+        "elbow_pitch": -0.2987447127436638,
+        "bucket_pitch": 0.6060418791527877
+      }
+    },
+    "lunar_hauler": {
+      "position": [
+        0.7072530287089334,
+        0.9800459711691737,
+        0.39746875645791807
+      ],
+      "rpy": [
+        7.344202385028066e-07,
+        -0.012154988877124004,
+        0.42697660350739436
+      ],
+      "joints": {
+        "bed_tilt": -0.6085293319749449,
+        "tailgate_hinge": 1.2363068035969422
+      }
+    }
+  },
+  "target_error_rad": {
+    "lunar_excavator": {
+      "shoulder_yaw": 0.01135006008231243,
+      "shoulder_pitch": 0.005387234383734729,
+      "elbow_pitch": 0.0012552872563361683,
+      "bucket_pitch": 0.006041879152787755
+    },
+    "lunar_hauler": {
+      "bed_tilt": 0.008529331974944876,
+      "tailgate_hinge": 0.03630680359694227
+    }
+  },
+  "returned_home": {
+    "lunar_excavator": {
+      "position": [
+        0.4561597086262925,
+        -0.7194694900065254,
+        0.3974690002475717
+      ],
+      "rpy": [
+        3.297272953089717e-08,
+        -0.01215487679180159,
+        0.42725830292244554
+      ],
+      "joints": {
+        "shoulder_yaw": -0.006094844574667991,
+        "shoulder_pitch": 0.005861096646656723,
+        "elbow_pitch": 0.0028949694578864426,
+        "bucket_pitch": -0.0057052051201606155
+      }
+    },
+    "lunar_hauler": {
+      "position": [
+        0.7072500131883864,
+        0.9800544568907776,
+        0.39746860693037994
+      ],
+      "rpy": [
+        1.2999482106224079e-06,
+        -0.012153180817308748,
+        0.4269770571833339
+      ],
+      "joints": {
+        "bed_tilt": 6.387143418329364e-14,
+        "tailgate_hinge": -1.6145905203102113e-11
+      }
+    }
+  },
+  "maximum_tilt_rad": {
+    "lunar_excavator": 0.014081675497740797,
+    "lunar_hauler": 0.01425249337944468
+  },
+  "validation_date": "2026-11-23",
+  "environment": "Gazebo Ionic 9, space-robotics-rl:ionic, lunar gravity 1.622 m/s^2, dt=0.005 s",
+  "asset_tests": {
+    "passed": 6,
+    "command": ".venv/bin/python -m pytest tests/models -q"
+  },
+  "sdf_validation": {
+    "lunar_excavator": "Valid",
+    "lunar_hauler": "Valid",
+    "mining_vehicles_world": "Valid"
+  },
+  "render_validation": {
+    "engine": "Ogre2",
+    "image": "../assets/models/mining_vehicles_gazebo.png",
+    "static_review_copy": true,
+    "missing_resource_errors": false
+  },
+  "scope": "Unloaded flat-ground smoke test; no soil, granular payload, terrain traversal, durability or full joint-workspace collision validation."
+}

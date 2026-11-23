@@ -20,6 +20,7 @@ from .learning import (
     restore_state,
     save_state,
 )
+from .training_log import TrainingLogger, training_plan
 from .vector_env import GazeboVectorEnv
 from .world import describe
 
@@ -31,8 +32,14 @@ def main():
     signal.signal(signal.SIGTERM, terminate)
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--world", choices=["moon", "mars"], default="moon")
-    p.add_argument(
-        "--steps", type=int, help="Vector steps (default: upstream YAML timesteps)"
+    budget = p.add_mutually_exclusive_group()
+    budget.add_argument(
+        "--iterations", type=int, help="Number of complete PPO sampling/update cycles"
+    )
+    budget.add_argument(
+        "--steps",
+        type=int,
+        help="Legacy vector-step budget, rounded up to complete PPO iterations",
     )
     p.add_argument("--num-envs", type=int, default=4)
     p.add_argument("--seed", type=int, default=42)
@@ -55,16 +62,20 @@ def main():
     p.add_argument("--stochastic-eval", action="store_true")
     args = p.parse_args()
     experiment = load_config(args.config)
-    steps = args.steps if args.steps is not None else experiment["trainer"]["timesteps"]
-    if (
-        steps < experiment["agent"]["rollouts"]
-        or args.num_envs < 1
-        or args.eval_episodes < 0
-        or args.eval_episodes == 1
-    ):
-        p.error(
-            "Require at least one rollout, positive num-envs and either 0 or >=2 eval episodes"
+    rollouts = experiment["agent"]["rollouts"]
+    try:
+        iterations, steps = training_plan(
+            iterations=args.iterations,
+            steps=args.steps,
+            rollout_steps=rollouts,
+            default_steps=experiment["trainer"]["timesteps"],
         )
+    except ValueError as exc:
+        p.error(str(exc))
+    if args.num_envs < 1 or args.eval_episodes < 0 or args.eval_episodes == 1:
+        p.error("Require positive num-envs and either 0 or >=2 eval episodes")
+    if experiment["agent"]["learning_starts"] >= rollouts:
+        p.error("Iteration logging requires learning_starts before the first update")
     if (args.output / "run.json").exists():
         p.error("Output already contains a run; choose a new output directory")
     torch.set_num_threads(2)
@@ -72,6 +83,7 @@ def main():
     cfg = NavigationConfig(world=args.world, device=args.device, seed=args.seed)
     spec = describe(cfg.world, cfg.assets)
     experiment["agent"]["experiment"]["wandb"] = False
+    experiment["agent"]["experiment"]["write_interval"] = rollouts
     if args.mini_batches is not None:
         if (
             not 1
@@ -100,6 +112,19 @@ def main():
         "world": spec,
         "experiment": experiment,
         "training_steps": steps,
+        "training_iterations": iterations,
+        "steps_per_iteration": rollouts,
+        "requested_training_steps": (
+            args.steps if args.steps is not None else experiment["trainer"]["timesteps"]
+        )
+        if args.iterations is None
+        else None,
+        "logging": {
+            "training_axis": "iteration",
+            "episode_axis": "completed_episode",
+            "iteration_records": "iterations.jsonl",
+            "episode_records": "episodes.jsonl",
+        },
         "num_envs": args.num_envs,
         "action_interface": {
             "layout": ["linear_mps", "angular_radps"],
@@ -118,6 +143,7 @@ def main():
     write_run()
     env = GazeboVectorEnv(cfg, args.num_envs)
     agent = None
+    training_logger = None
     try:
         agent = create_agent(env, experiment, directory=args.output)
         trainer = SequentialTrainer(
@@ -149,37 +175,29 @@ def main():
         env.latest = None
         env.episodes.clear()
         started = time.monotonic()
-        vector_step = 0
-
-        def progress():
-            nonlocal vector_step
-            vector_step += 1
-            if vector_step % 60 == 0:
-                recent = env.episodes[-20:]
-                print(
-                    json.dumps(
-                        {
-                            "vector_step": vector_step,
-                            "episodes": len(env.episodes),
-                            "recent_return": (
-                                sum(r["return"] for r in recent) / len(recent)
-                                if recent
-                                else None
-                            ),
-                            "elapsed_seconds": round(time.monotonic() - started, 1),
-                        }
-                    ),
-                    flush=True,
-                )
-
-        env.progress_callback = progress
+        training_logger = TrainingLogger(
+            total_iterations=iterations,
+            steps_per_iteration=rollouts,
+            output_dir=args.output,
+            started_at=started,
+        )
+        agent.training_logger = training_logger
+        requested_steps = metadata["requested_training_steps"]
+        if requested_steps is not None and requested_steps != steps:
+            print(
+                f"Rounded {requested_steps} requested vector steps to {iterations} "
+                f"complete iterations ({steps} vector steps).",
+                flush=True,
+            )
         print(
-            f"Training {steps} vector steps in {cfg.world} using the original robot and physics",
+            f"Training {iterations} PPO iterations in {cfg.world} with {args.num_envs} "
+            "independent environments using the original robot and physics",
             flush=True,
         )
         trainer.train()
-        env.progress_callback = None
+        agent.training_logger = None
         metadata["elapsed_training_seconds"] = time.monotonic() - started
+        metadata["completed_training_iterations"] = training_logger.iteration
         save_state(agent, args.output / "final.pt", metadata)
         write_run()
         (args.output / "training_episodes.json").write_text(
@@ -205,10 +223,19 @@ def main():
     except KeyboardInterrupt:
         if agent is not None:
             metadata["interrupted"] = True
+            if training_logger is not None:
+                metadata["completed_training_iterations"] = training_logger.iteration
             save_state(agent, args.output / "interrupted.pt", metadata)
             write_run()
         print("Training interrupted; saved interrupted.pt", flush=True)
     finally:
+        if training_logger is not None:
+            training_logger.close()
+        if agent is not None:
+            agent.training_logger = None
+            writer = getattr(agent, "writer", None)
+            if writer is not None:
+                writer.close()
         env.close()
 
 

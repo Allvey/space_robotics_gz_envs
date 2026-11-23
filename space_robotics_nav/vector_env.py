@@ -18,7 +18,6 @@ class GazeboVectorEnv(Wrapper):
         self.envs, self.episodes = [], []
         self.latest = None
         self.closed = False
-        self.progress_callback = None
         try:
             for i in range(num_envs):
                 # Separate mutable object poses; immutable mesh geometry is cached.
@@ -105,8 +104,6 @@ class GazeboVectorEnv(Wrapper):
                 log[f"Episode/{name}"] = torch.tensor(
                     np.mean([e[name] for e in episodes]), device=self.device
                 )
-        if self.progress_callback is not None:
-            self.progress_callback()
         return (
             self.latest,
             torch.tensor(reward, device=self.device, dtype=torch.float32)[:, None],

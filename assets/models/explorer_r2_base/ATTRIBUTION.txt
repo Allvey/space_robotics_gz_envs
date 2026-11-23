@@ -1,0 +1,24 @@
+EXPLORER_R2_SENSOR_CONFIG_1, Fuel version 17
+
+Creator / attribution: Team Explorer
+Publisher: OpenRobotics (Gazebo Fuel)
+Description from upstream: R2 wheeled UGV submitted by Team Explorer
+Source: https://fuel.gazebosim.org/1.0/OpenRobotics/models/EXPLORER_R2_SENSOR_CONFIG_1
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+The original model.sdf, model.config, r2.dae, material scripts, and three PBR
+texture images in this directory are unchanged copies from the project's
+existing Fuel cache. Their hashes are recorded in source_manifest.json.
+The publisher's license metadata is preserved in fuel_metadata.json.
+
+Adaptations in sibling lunar_excavator and lunar_hauler directories:
+New payload frames, mining arm, scoop, tipping cargo bed and tailgate;
+relocated rear RGB-D camera, additional drive / joint controllers, updated
+SDF syntax, default vehicle lamps off and hidden light visualizations.
+Original chassis, wheels, center pivot, mass / inertia, and PBR atlas retained.
+These are project-created conceptual mining adaptations, not official Team
+Explorer or NASA mining vehicle designs. The combined Blender scene and
+rendered previews incorporate the above attributed vehicle assets.
+
+Changes made in this project: 2026-11-23.

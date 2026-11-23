@@ -22,7 +22,7 @@ HEADLESS=false
 for arg in "$@"; do
     case "$arg" in
         --headless) HEADLESS=true ;;
-        moon|mars|moon_array|mars_array|_empty) WORLD="$arg" ;;
+        moon|mars|moon_array|mars_array|_empty|mining_vehicles) WORLD="$arg" ;;
         *) echo "Unknown argument: $arg" >&2; exit 2 ;;
     esac
 done
@@ -47,7 +47,9 @@ OPTIONS=(
     --env __NV_PRIME_RENDER_OFFLOAD=1
     --env __GLX_VENDOR_LIBRARY_NAME=nvidia
     --env QT_X11_NO_MITSHM=1
+    --env GZ_SIM_RESOURCE_PATH=/root/ws/assets/models:/root/ws/assets/cache:/root/ws/worlds
     --volume "$REPOSITORY_DIR/worlds:/root/ws/worlds:ro"
+    --volume "$REPOSITORY_DIR/assets/models:/root/ws/assets/models:ro"
     --volume "$REPOSITORY_DIR/scripts:/root/ws/scripts:ro"
     --volume "$ASSETS_VOLUME:/root/ws/assets/cache"
     --volume "$HOME_VOLUME:/root/.gz"

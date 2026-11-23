@@ -66,4 +66,4 @@ CMD ["bash"]
 ############
 
 ## Set path to the procedurally generated resources for Gazebo
-ENV GZ_SIM_RESOURCE_PATH="${WS_PATH}/assets/cache:${WS_PATH}/worlds"
+ENV GZ_SIM_RESOURCE_PATH="${WS_PATH}/assets/models:${WS_PATH}/assets/cache:${WS_PATH}/worlds"

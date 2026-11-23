@@ -1,0 +1,13 @@
+{
+  "source": "https://fuel.gazebosim.org/1.0/OpenRobotics/models/EXPLORER_R2_SENSOR_CONFIG_1",
+  "version": 17,
+  "sha256": {
+    "model.config": "d6c40044436ff05f64954184c18802be7779079d82765063ab2c46adc0d417ad",
+    "model.sdf": "0bd01a7046aef1646994c97f4e8b2c0e9ebd40d65e4a482d516f26330ef0e81c",
+    "meshes/r2.dae": "c62c516b81474026c2006b1344cf39141e7a968dfb94e73c741a766daeaa45dd",
+    "materials/scripts/model.material": "a50503612239e8d84dd6d40645b91f8252df18dcf3cd20e09bd779e728a0b638",
+    "materials/textures/R2_Albedo.jpg": "50de9b7d396a23f3350fcd802f56fd754e48aee4e26dab53060ece24508159c0",
+    "materials/textures/R2_Roughness.jpg": "63f670df4e13605152d5cc87b47ac043783868650532f9530063f15018182dd0",
+    "materials/textures/R2_Metalness.jpg": "8fc48e5919eabdd5ae60af071bfec527039a943f370848af404d1fe914cecb42"
+  }
+}
