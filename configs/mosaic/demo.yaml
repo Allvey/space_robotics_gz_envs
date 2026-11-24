@@ -1,0 +1,114 @@
+# Original moon.sdf terrain and rocks; sensing/instruments remain replaceable placeholders.
+image: space-robotics-rl:ionic
+control_dt: 0.2
+sensors_enabled: false
+scene_objects_static: true
+exploration_seconds: 10.0
+measurement_clearance: 0.6
+poi_planning:
+  depth: 3
+  discount: 0.8
+  interval: 2.0
+  intention_ttl: 20.0
+  switch_margin: 5.0
+  wall_budget: 1.0
+  max_queries: 128
+exploration:
+  enabled: true
+  spacing: 6.0
+  clearance: 0.6
+  queue_size: 2
+providers:
+  localization: gazebo_ground_truth
+  global_map: project_collision_geometry
+  local_map: known_map_crop
+  detection: simulated_range_detector
+navigation:
+  global_planner: grid_astar
+  local_controller: path_tracker
+map:
+  bounds:
+  - -18
+  - -18
+  - 18
+  - 18
+  resolution: 0.25
+  max_slope: 0.28
+  max_height_residual: 0.12
+  max_step_height: 0.12
+  ground_smoothing: 0.20
+  roughness_window: 0.60
+robots:
+- name: explorer_r2
+  model: explorer_r2
+  label: EXPLORER R2
+  role: Scout
+  home:
+  - 14
+  - -5
+  - 0
+  radius: 0.9
+  turn_offset: 0.35
+  tracking_margin: 0.6
+  max_angular: 0.35
+  allow_reverse: false
+  yaw_rate_damping: 0.3
+  position_tolerance: 0.45
+  capabilities:
+  - move
+  - explore
+  - rock_candidate
+  preferences:
+    explore: 110
+    rock_candidate: 130
+    move: 80
+- name: explorer_r2_science
+  model: explorer_r2
+  label: EXPLORER R2
+  role: Scientist
+  home:
+  - 4
+  - -13.5
+  - 0
+  radius: 0.9
+  turn_offset: 0.35
+  tracking_margin: 0.6
+  max_angular: 0.35
+  allow_reverse: false
+  yaw_rate_damping: 0.3
+  position_tolerance: 0.45
+  capabilities:
+  - move
+  - ground_measurement
+  - rock_measurement
+  preferences:
+    ground_measurement: 110
+    rock_measurement: 130
+    move: 80
+obstacles: []
+targets:
+- id: lunar_rock0
+  object: lunar_rock0
+  approach_selection: nearest_reachable
+  inspection_max_distance: 3.0
+  inspection_clearance: 0.6
+  measurement_max_distance: 3.5
+- id: lunar_rock6
+  object: lunar_rock6
+  approach_selection: nearest_reachable
+  inspection_max_distance: 3.0
+  inspection_clearance: 0.6
+  measurement_max_distance: 3.5
+detection_radius: 14
+pois:
+- id: explore_lunar_site
+  kind: explore
+  pose:
+  - 9
+  - 0
+  - 0
+- id: explore_lunar_east
+  kind: explore
+  pose: [14, 5, 0]
+world: moon
+camera_pose: 0 -21 22 0 1.0 0.85

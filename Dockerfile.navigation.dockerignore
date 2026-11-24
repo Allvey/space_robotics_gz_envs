@@ -2,3 +2,5 @@
 !native/
 !native/navigation/
 !native/navigation/worker.cc
+!native/mosaic/
+!native/mosaic/worker.cc

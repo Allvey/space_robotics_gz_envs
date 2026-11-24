@@ -32,6 +32,15 @@ Navigation reinforcement learning on the original Gazebo robots and worlds is av
 基于原有 EXPLORER R2 改装的采矿车与运输车，见 [模型预览、启动与控制说明](docs/MINING_VEHICLES.md)。
 展示场景为 [`worlds/mining_vehicles.sdf`](worlds/mining_vehicles.sdf)。
 
+MOSAIC 最小多车任务系统默认使用项目原始月面 `worlds/moon.sdf`，
+由两辆 EXPLORER R2 分别负责侦察与科学测量，提供地形导航、
+共享 POI、能力分工、交互式任务面板与 Gazebo 路径标记；定位暂用真值，检测／测量暂为模拟。
+侦察车到探索点停留分析 10 秒，可批量登记候选，并持续从当前地图补充新探索点；科学车仅在满足配置测量距离的可达站位执行，无法抵近的任务保留为待处理。
+初始只设置探索 POI；随机月面沿用项目原始 `srb_assets` / Blender 几何及 PBR 材质生成流程，默认 80×80 m、2 辆侦察车和 2 辆测量车。新场景保留原岩石散布密度的 20% 和 16 个科学目标，另以 2 m 分层采样均匀铺设低矮碎石，包含边缘与四角，保留原网格细度与 8K 材质；车辆可在完整足迹检查下驶离规划膨胀余量带。
+启动、随机场景生成与后续感知、定位、建图模块的接入见 [MOSAIC 说明](docs/MOSAIC.md)。
+默认任务规划深度为 3，预测后续位置并折扣远期效用；当前任务独占，后续意向协调去重且允许让位，面板显示计划顺序与预计到达时间。
+该功能在同一个 Gazebo 世界运行多辆车，与下文的并行单车 PPO 训练分别启动。
+
 <details><summary><h3>Installation (Docker)</h3></summary>
 
 This section provides instructions for running the simulation within a Docker container. If you are using a different operating system than Ubuntu, you may need to adjust the following steps accordingly or refer to the official documentation for each step.

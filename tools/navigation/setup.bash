@@ -20,8 +20,10 @@ fi
 NAV_CONTEXT="$(mktemp -d)"
 trap 'rm -rf "$NAV_CONTEXT"' EXIT
 mkdir -p "$NAV_CONTEXT/native/navigation"
+mkdir -p "$NAV_CONTEXT/native/mosaic"
 cp Dockerfile.navigation "$NAV_CONTEXT/Dockerfile"
 cp native/navigation/worker.cc "$NAV_CONTEXT/native/navigation/worker.cc"
+cp native/mosaic/worker.cc "$NAV_CONTEXT/native/mosaic/worker.cc"
 docker build --network host --build-arg "PROJECT_IMAGE=$NAV_BASE_IMAGE" \
     --build-arg "COMPILER_IMAGE=$NAV_COMPILER" -t space-robotics-rl:ionic "$NAV_CONTEXT"
 uv run --frozen --extra test pytest tests/navigation -q

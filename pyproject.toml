@@ -28,6 +28,7 @@ test = ["pytest==9.1.1"]
 rover-train = "space_robotics_nav.train:main"
 rover-eval = "space_robotics_nav.evaluate:main"
 rover-play = "space_robotics_nav.play:main"
+rover-mosaic = "space_robotics_nav.mosaic.run:main"
 
 [tool.setuptools.packages.find]
 include = ["space_robotics_nav*"]
@@ -36,7 +37,7 @@ include = ["space_robotics_nav*"]
 "space_robotics_nav.planning" = ["LICENSE.PythonRobotics"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests/navigation", "tests/models"]
+testpaths = ["tests/navigation", "tests/models", "tests/mosaic"]
 
 [tool.uv.sources]
 torch = { index = "pytorch-cu128" }

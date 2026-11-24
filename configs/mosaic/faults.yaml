@@ -1,0 +1,21 @@
+# Simulation seconds after the initial settling phase. Reproducible operator /
+# localization interruption sequence; run with --script and --auto-approve.
+- at: 3
+  op: pause
+  robot: lunar_hauler
+- at: 5
+  op: teleop
+  robot: lunar_hauler
+  velocity: [0.1, 0]
+  seconds: 1
+- at: 8
+  op: resume
+  robot: lunar_hauler
+- at: 12
+  op: localization_valid
+  robot: lunar_excavator
+  valid: false
+- at: 16
+  op: localization_valid
+  robot: lunar_excavator
+  valid: true

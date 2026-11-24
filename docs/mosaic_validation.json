@@ -1,0 +1,804 @@
+{
+  "scope": "Depth3 snapshot-based greedy POI planning and unique replaceable future intentions; 2 scouts + 2 scientists on unchanged original uniform native lunar terrain. Truth localization, known map, simulated detection/instruments.",
+  "previous_validation": "logs/mosaic/pre_depth_planning/mosaic_validation.json",
+  "generator": {
+    "implementation": {
+      "generator": "srb_assets/LunarTerrain",
+      "image": "space_robotics_gz_envs:latest",
+      "image_id": "sha256:d117c571f98e334c5abdf8094cdb5e57a0e12d11671133477c2936cb0daf91ee",
+      "source_sha256": [
+        "3acd967c9da66dd8756ad23b779677b53abdefa146f904ae24c10b5e1ac4f834  /root/ws/assets/srb_assets/scripts/blender/procgen_assets.py",
+        "0526f18bbc21feae472db20a8c6893e209fdf9dc94594a9388253997d1a1a9ea  /root/ws/assets/srb_assets/model/terrain/lunar_surface_procgen/geometry.py",
+        "b1a380b40259e741729599556ca360b30630b4a840c739efd09c16a6d4cd6b3f  /root/ws/assets/srb_assets/model/terrain/lunar_surface_procgen/material.py"
+      ],
+      "geometry_nodes": {
+        "density": 0.08,
+        "scale": [
+          80.0,
+          80.0,
+          4.0
+        ],
+        "flat_area_size": 2.0,
+        "rock_mesh_boolean": false
+      },
+      "rock_density_factor": 0.2,
+      "pebbles": {
+        "distribution": "jittered_xy_strata_projected_onto_original_mesh",
+        "spacing": 2.0,
+        "strata_per_axis": 40,
+        "jitter_fraction": 0.35,
+        "diameter_range_m": [
+          0.12,
+          0.3
+        ],
+        "height_range_m": [
+          0.03,
+          0.07
+        ],
+        "buried_fraction": 0.15,
+        "shape": "srb_assets/LunarRock"
+      },
+      "profile_sha256": "7ce783c7cf8634c1918b935396fb325aef129bfc389b6aead09b1573e47b5203",
+      "texture_resolution": 8192,
+      "render_samples": 2,
+      "seed": 17,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--gpus",
+        "all",
+        "--network",
+        "none",
+        "--env",
+        "PYTHONUNBUFFERED=1",
+        "--env",
+        "MOSAIC_ROCK_DENSITY_FACTOR=0.2",
+        "--env",
+        "MOSAIC_TERRAIN_SIZE=80.0",
+        "--env",
+        "MOSAIC_PEBBLE_SPACING=2.0",
+        "--env",
+        "PROCGEN_UID=1000",
+        "--env",
+        "PROCGEN_GID=1000",
+        "--volume",
+        "/home/allvey/Projects/robotics/space_robotics_gz_envs/assets/generated/mosaic_lunar80_uniform_seed17_2s2m/procgen:/output",
+        "--volume",
+        "/home/allvey/Projects/robotics/space_robotics_gz_envs/space_robotics_nav/mosaic/lunar_profile.py:/mosaic-lunar-profile.py:ro",
+        "--entrypoint",
+        "bash",
+        "space_robotics_gz_envs:latest",
+        "-c",
+        "/root/blender/blender \"$@\"; result=$?; chown -R \"$PROCGEN_UID:$PROCGEN_GID\" /output; exit \"$result\"",
+        "mosaic-procgen",
+        "--factory-startup",
+        "--background",
+        "--offline-mode",
+        "--enable-autoexec",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/root/ws/assets/srb_assets/scripts/blender/procgen_assets.py",
+        "--",
+        "--autorun_scripts",
+        "/root/ws/assets/srb_assets/model/terrain/lunar_surface_procgen/geometry.py",
+        "/mosaic-lunar-profile.py",
+        "/root/ws/assets/srb_assets/model/terrain/lunar_surface_procgen/material.py",
+        "--name",
+        "lunar_surface",
+        "--ext",
+        "sdf",
+        "--overwrite_min_age",
+        "-1",
+        "--seed",
+        "17",
+        "--num_assets",
+        "1",
+        "--geometry_nodes",
+        "{\"LunarTerrain\": {\"density\": 0.08, \"scale\": [80.0, 80.0, 4.0], \"flat_area_size\": 2.0, \"rock_mesh_boolean\": false}}",
+        "--material",
+        "LunarSurface",
+        "--texture_resolution",
+        "8192",
+        "--render_samples",
+        "2",
+        "--render_thumbnail",
+        "--thumbnail_resolution",
+        "1024",
+        "--outdir",
+        "/output"
+      ],
+      "model_sha256": "dfdc4c1eaad917bbe433f3014ce22e187fa4b6fae7300e116f5ae0e74a610bd2"
+    },
+    "geometry": {
+      "faces": 2329158,
+      "glb_bytes": 281478280,
+      "images": [
+        {
+          "name": "normal",
+          "size": [
+            8192,
+            8192
+          ]
+        },
+        {
+          "name": "albedo",
+          "size": [
+            8192,
+            8192
+          ]
+        },
+        {
+          "name": "metallic-roughness",
+          "size": [
+            8192,
+            8192
+          ]
+        }
+      ]
+    },
+    "upstream_sources_match_previous_build": true,
+    "baked_asset_source": "assets/generated/mosaic_lunar80_uniform_seed17_2s2m/procgen/lunar_surface17/model.sdf",
+    "runtime_glb_matches_generated": true
+  },
+  "pebble_coverage": {
+    "size_m": 80,
+    "pebbles": 1600,
+    "strata": [
+      40,
+      40
+    ],
+    "stratum_size_m": 2,
+    "all_strata_covered": true,
+    "tiles_10m_counts": [
+      [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25
+      ]
+    ],
+    "same_seed_identical": true,
+    "different_seed_moves_pebbles": true,
+    "actual_exposed_height_range_m": [
+      0.02552012825885619,
+      0.0594986274813305
+    ],
+    "actual_embedded_depth_range_m": [
+      0.004503556894515981,
+      0.010499732737540679
+    ],
+    "source": "Evaluated native Blender geometry, not planned positions",
+    "probe": "logs/mosaic/uniform_probe80/probe.json",
+    "script": "logs/mosaic/uniform_probe80/validate_geometry.py"
+  },
+  "scenario": {
+    "config": "assets/generated/mosaic_lunar80_uniform_seed17_2s2m/mission.yaml",
+    "size_m": 80,
+    "seed": 17,
+    "scouts": 2,
+    "scientists": 2,
+    "extra_science_targets": 16,
+    "rock_density_factor": 0.2,
+    "pebble_spacing_m": 2,
+    "pebbles": 1600,
+    "initial_pois": "exploration only",
+    "max_step_height_m": 0.12,
+    "poi_planning_depth": 3,
+    "exploration_queue_per_scout": 3
+  },
+  "map_comparison": {
+    "Sparse": {
+      "blocked_fraction": 0.07261187294377966,
+      "footprint_free_fraction": 0.723828378994769,
+      "largest_component_fraction": 0.7220620917887055,
+      "science_objects": 16,
+      "traversable_science_objects": 13
+    },
+    "Uniform": {
+      "blocked_fraction": 0.07271862656612417,
+      "footprint_free_fraction": 0.7229743500160131,
+      "largest_component_fraction": 0.7212080628099494,
+      "science_objects": 16,
+      "traversable_science_objects": 13
+    },
+    "height_difference": {
+      "min_m": 0.0,
+      "max_m": 0.07373428344726562,
+      "unchanged_fraction": 0.9920744381203986,
+      "lowered_more_than_1mm": 0
+    }
+  },
+  "tests": {
+    "mosaic_full_suite": {
+      "passed": 95,
+      "skipped": 0,
+      "elapsed_seconds": 168.68,
+      "command": "RUN_GAZEBO_TESTS=1 RUN_MOSAIC_GUI_TESTS=1 .venv/bin/python -m pytest tests/mosaic -q --basetemp logs/mosaic/depth_full02",
+      "log": "logs/mosaic/depth_full02.log"
+    },
+    "project_unit_suite": {
+      "passed": 168,
+      "skipped": 16,
+      "elapsed_seconds": 15.69,
+      "command": ".venv/bin/python -m pytest tests -q --basetemp logs/mosaic/depth_project_unit",
+      "log": "logs/mosaic/depth_project_unit.log"
+    }
+  },
+  "recorded_deadlock_regression": {
+    "fixture": "tests/mosaic/fixtures/navigation_margin_deadlock.json",
+    "result": "passed in full suite",
+    "each_robot_moved_at_least_m": 0.3,
+    "real_native_wheel_physics": true,
+    "unsafe_contacts_allowed": false
+  },
+  "fleet_run": {
+    "source": "logs/mosaic/depth3_1800_01",
+    "sim_time": 1803.8,
+    "status_counts": {
+      "succeeded": 47,
+      "running": 2,
+      "available": 4
+    },
+    "completed_exploration": 35,
+    "completed_measurements": [
+      {
+        "poi": "rock:random_rock_007",
+        "robot": "scientist_01",
+        "stamp": 249.0,
+        "distance_m": 2.8228624884354914
+      },
+      {
+        "poi": "rock:random_rock_010",
+        "robot": "scientist_01",
+        "stamp": 73.8,
+        "distance_m": 3.350471568687523
+      },
+      {
+        "poi": "rock:random_rock_011",
+        "robot": "scientist_01",
+        "stamp": 171.0,
+        "distance_m": 1.1925892496069055
+      },
+      {
+        "poi": "rock:random_rock_000",
+        "robot": "scientist_02",
+        "stamp": 316.6,
+        "distance_m": 0.93687197642559
+      },
+      {
+        "poi": "rock:random_rock_015",
+        "robot": "scientist_02",
+        "stamp": 146.4,
+        "distance_m": 3.1171925445911723
+      },
+      {
+        "poi": "rock:random_rock_009",
+        "robot": "scientist_02",
+        "stamp": 200.8,
+        "distance_m": 3.2601870597623597
+      },
+      {
+        "poi": "rock:random_rock_013",
+        "robot": "scientist_01",
+        "stamp": 657.0,
+        "distance_m": 3.079772651123901
+      },
+      {
+        "poi": "rock:random_rock_002",
+        "robot": "scientist_02",
+        "stamp": 1306.2,
+        "distance_m": 3.2328261672969214
+      },
+      {
+        "poi": "rock:random_rock_014",
+        "robot": "scientist_01",
+        "stamp": 1516.8,
+        "distance_m": 3.333307807686776
+      },
+      {
+        "poi": "rock:random_rock_008",
+        "robot": "scientist_02",
+        "stamp": 1387.4,
+        "distance_m": 3.1926253640347295
+      },
+      {
+        "poi": "rock:random_rock_005",
+        "robot": "scientist_02",
+        "stamp": 1685.6,
+        "distance_m": 2.9916635811711534
+      },
+      {
+        "poi": "rock:random_rock_004",
+        "robot": "scientist_01",
+        "stamp": 1742.0,
+        "distance_m": 3.220698429880894
+      }
+    ],
+    "failed_attempts": {
+      "navigation_timeout": 3
+    },
+    "help_tasks": [],
+    "contacts": {
+      "unsafe_records": 0,
+      "body_contact_records": 0,
+      "raw_non_ground_contact_records": 69
+    },
+    "travel_distance_by_robot_m": {
+      "scientist_01": 137.32410294625612,
+      "scientist_02": 101.91140956290891,
+      "scout_01": 302.53916238022566,
+      "scout_02": 384.35610291306347
+    },
+    "total_travel_distance_m": 926.1307778024542,
+    "idle_without_task_seconds_by_robot": {
+      "scientist_01": 1203.0,
+      "scientist_02": 1363.9999999999998,
+      "scout_01": 9.999999999999893,
+      "scout_02": 11.00000000000032
+    },
+    "longest_all_physically_stationary_s": 9.799999999999997,
+    "control_decision_wall_s": {
+      "p50": 0.0014841944994259393,
+      "p95": 0.0038411376997828477,
+      "p99": 0.01641298396090861,
+      "maximum": 0.1060163010006363
+    },
+    "planning": {
+      "published_versions": 1031,
+      "maximum_sequence_length": 3,
+      "maximum_future_owners": 5,
+      "duplicate_poi_in_plan_sets": 0,
+      "overlap_future_owners_with_current_claims": 0,
+      "expired_published_intentions": 0,
+      "worker_errors": 0,
+      "maximum_worker_elapsed_s": 0.1441766429998097,
+      "truncated_versions": 0
+    },
+    "exploration_state": "active"
+  },
+  "visual_review": {
+    "terrain_thumbnail": "assets/generated/mosaic_lunar80_uniform_seed17_2s2m/procgen/lunar_surface17/thumbnails/0.png",
+    "map_comparison": "logs/mosaic/uniform_preview/comparison.png",
+    "runtime_map": "logs/mosaic/uniform_2s2m_1800_02/map.png",
+    "new_gazebo_render_capture": true,
+    "gazebo_corner_view": "logs/mosaic/uniform_render/corner.png",
+    "planning_panel": "logs/mosaic/depth_ui_preview/panel.png",
+    "planning_panel_state": "logs/mosaic/depth_ui_preview/mission_state.json",
+    "planning_panel_source": "Actual final depth3_1800_01 snapshot; frozen for UI review"
+  },
+  "limitations": [
+    "Known-map / simulation-truth adapters and simulated detection/instruments; no SLAM or real visual detection.",
+    "The low pebble layer changes physical geometry; the previous sparse scene remains available. Mesh detail, upstream source scripts and 8K texture sizes are retained.",
+    "2D circular footprint and short simulated trajectories, not a full terrain-dynamics or multi-robot traffic planner.",
+    "Remaining task failures and help tasks are retained with their real reasons; not all terrain or traffic is guaranteed reachable.",
+    "Contact telemetry is sampled at control snapshots, not a continuous collision-event log.",
+    "One seed, one 1800s run per depth; depth3 completed fewer exploration and measurement tasks than depth1. No claim of throughput improvement.",
+    "Asynchronous result timing may change subsequent greedy decisions. Predicted ETA uses path length / (0.8*max speed) plus dwell; not a learned travel-time or battery model.",
+    "Centralized soft-intention coordination is an implementation choice, not a distributed wire-protocol or verbatim reproduction of MOSAIC source.",
+    "Worker budget is cooperative; individual NumPy/SciPy calls are not preemptible. Current-head safety/station checks still run in the mission thread.",
+    "Depth planning does not provide multi-robot space-time reservations, collision-free task-link lines, or guaranteed deadlock avoidance."
+  ],
+  "long_route_timeout_regression": {
+    "before": "logs/mosaic/uniform_2s2m_1800_01",
+    "after": "logs/mosaic/uniform_2s2m_1800_02",
+    "before_help_tasks": 2,
+    "observed_normal_travel_before_180s_timeout_m": [
+      44.836835630741376,
+      44.77808212857777
+    ],
+    "policy": "Finite first-path distance / speed budget; replans do not renew deadline"
+  },
+  "native_r2_source_sha256": "0bd01a7046aef1646994c97f4e8b2c0e9ebd40d65e4a482d516f26330ef0e81c",
+  "runtime_vehicle_adaptations": {
+    "wheel_slip": 0,
+    "wheel_separation_m": 0.726,
+    "debug_sensor_and_light_visuals": false,
+    "source_models_modified": false
+  },
+  "source_sha256": {
+    "README.md": "cf6fb1e665e5aef21e2ebafad1a39f80f2e906445614de0433f9b14d3c1c6527",
+    "assets/generated/mosaic_lunar80_seed17_2s2m/mission.yaml": "d948d19df7b1d109ee4c16249658d2b1f762b876881280af5142b8431bb23679",
+    "assets/generated/mosaic_lunar80_sparse_seed17_2s2m/mission.yaml": "86e325a748d54f50c049b4eb26c10345d705b28a4e5005c6af10a047a22ff421",
+    "assets/generated/mosaic_lunar80_uniform_seed17_2s2m/mission.yaml": "e14c78e0a23495fe42b74e43c11ab4042b911ed097b10aa26ae08043125f028c",
+    "configs/mosaic/demo.yaml": "e53f78b7d43cc99ca6b6a13e59d4ac589f868d734cad5dd1422db7f080257f50",
+    "docs/MOSAIC.md": "74369e423b5aa7924754d1be602497433021e01b5ffe221d8960547616fd963e",
+    "native/mosaic/worker.cc": "7b839792432e9a24293abd46ddae1885383a4f29564ff2cdf925724593e5ff33",
+    "space_robotics_nav/mosaic/control.py": "8ccbec9f12806def1289c8faf53839de4883ffb2fa54d2ac3756f59c9210f550",
+    "space_robotics_nav/mosaic/generate.py": "87089b3e226224a626ad05a8d09f1a152545116a106829d951c054a320c4e97e",
+    "space_robotics_nav/mosaic/lunar_profile.py": "7ce783c7cf8634c1918b935396fb325aef129bfc389b6aead09b1573e47b5203",
+    "space_robotics_nav/mosaic/maps.py": "94cd2f49c0c54305bcc9242306a808e7cd1367a88cff0bc8e5536d04cf926c37",
+    "space_robotics_nav/mosaic/mission.py": "d691f51a00452b0e0d68848d6283ff82b88fdcbe52c6baf8856e3c36f9de2c27",
+    "space_robotics_nav/mosaic/navigation.py": "6b87f8f6aa626bc9669e978df9120e8b11e7610e6dcc24c62c15ccc00ae88e26",
+    "space_robotics_nav/mosaic/poi_planning.py": "ea5e72f2923699bf48486d69107e3286f09d712a11f7aabd467bf7b1474a2071",
+    "space_robotics_nav/mosaic/procgen.py": "245457ca1b1149e82ad1d1e841cc0b91002a462a6e38e1c86ba2bdfba2b9b2c2",
+    "space_robotics_nav/mosaic/providers.py": "1c8daf285525d284a35fa1477e1578a1da8264ff3ef22df326087ec1592340d2",
+    "space_robotics_nav/mosaic/run.py": "c578ebc70ce6884753e45f0e21548499205d3c8db24f232fb25364f61abadabf",
+    "space_robotics_nav/mosaic/scene.py": "dc0a45378c13628c9712cb1ed75dc5005dd140b7f386813226ad9ecc011207fe",
+    "space_robotics_nav/mosaic/traversability.py": "cd8aff1afa46c993ab442725c65623cb3f12339d1d8b6f0288cdf0df50725cc6",
+    "space_robotics_nav/mosaic/vehicles.py": "dcc53320254ffa5608758c1c7fab680462343cc8700f93a875b3fcd06ed1598a",
+    "space_robotics_nav/mosaic/visualization.py": "c2189dd07bb6b6a72e5a8dbf9242842806e507d56c8ccf02bd17e990c04420a1",
+    "tests/mosaic/test_generated_scene.py": "bbaac4473445b8ae676d006d2db992f388ccc13f67c440ed23f836dad29a2c77",
+    "tests/mosaic/test_poi_planning.py": "ce6da61d4ec9f7d57aed94cc0e030348930e97eb721f74b7eef364993d269161",
+    "tests/mosaic/test_scene_visualization.py": "dae56a41d35d34408659702bc5651953e98f3849aaeea9b6135a9cecd935a62a",
+    "tools/models/capture_world_preview.py": "e0e78aaa5e4ad71a6e955f17de1bc94735b6ba51e45e085e3a65af9949041cf8"
+  },
+  "poi_planning": {
+    "depth": 3,
+    "discount": 0.8,
+    "interval_s": 2,
+    "intention_ttl_s": 20,
+    "switch_margin": 5,
+    "wall_budget_s": 1,
+    "max_queries": 128,
+    "algorithm": "Multi-step greedy predicted-state rollout; immediate opportunities allocated before future intentions; no cumulative-reward/exhaustive optimization",
+    "execution_claims": "Only current task holds token; future POIs remain available; active task is not preempted",
+    "future_coordination": "Unique published owner; replaceable, with TTL and 5-point hysteresis only for future bids",
+    "source": "space_robotics_nav/mosaic/poi_planning.py",
+    "ui": "POI plan tab and dashed task-order links",
+    "safety": "Existing footprint, local occupancy, collision and measurement-range checks retained; planner uses detached known-POI snapshots only",
+    "future_science_generation": false,
+    "science_prediction_origin": "Explicit predicted pose; never mutate live localization",
+    "legacy": "depth1 or absent poi_planning uses original single-step selection"
+  },
+  "depth_comparison": {
+    "scenario": "Same 80m uniform native lunar geometry, seed17, 2 scouts + 2 scientists, queue_size3, 1800s after settling",
+    "runs": {
+      "depth1": {
+        "source": "logs/mosaic/depth1_1800_01",
+        "sim_time": 1803.8,
+        "status_counts": {
+          "succeeded": 56,
+          "available": 4,
+          "running": 2
+        },
+        "completed_exploration": 41,
+        "completed_measurements": [
+          {
+            "poi": "rock:random_rock_007",
+            "robot": "scientist_01",
+            "stamp": 242.8,
+            "distance_m": 2.9986845655028507
+          },
+          {
+            "poi": "rock:random_rock_010",
+            "robot": "scientist_01",
+            "stamp": 73.2,
+            "distance_m": 3.3623595306033343
+          },
+          {
+            "poi": "rock:random_rock_011",
+            "robot": "scientist_01",
+            "stamp": 149.8,
+            "distance_m": 1.0855275377266276
+          },
+          {
+            "poi": "rock:random_rock_000",
+            "robot": "scientist_02",
+            "stamp": 304.4,
+            "distance_m": 0.6027513949007614
+          },
+          {
+            "poi": "rock:random_rock_015",
+            "robot": "scientist_02",
+            "stamp": 145.0,
+            "distance_m": 3.1181486349435183
+          },
+          {
+            "poi": "rock:random_rock_009",
+            "robot": "scientist_02",
+            "stamp": 198.6,
+            "distance_m": 3.248170415539847
+          },
+          {
+            "poi": "rock:random_rock_013",
+            "robot": "scientist_01",
+            "stamp": 367.2,
+            "distance_m": 3.029159844520325
+          },
+          {
+            "poi": "rock:random_rock_002",
+            "robot": "scientist_02",
+            "stamp": 840.8,
+            "distance_m": 2.5599742172917392
+          },
+          {
+            "poi": "rock:random_rock_008",
+            "robot": "scientist_01",
+            "stamp": 1086.8,
+            "distance_m": 3.354389783761851
+          },
+          {
+            "poi": "rock:random_rock_005",
+            "robot": "scientist_02",
+            "stamp": 1095.0,
+            "distance_m": 0.9094658263669595
+          },
+          {
+            "poi": "rock:random_rock_012",
+            "robot": "scientist_01",
+            "stamp": 1236.2,
+            "distance_m": 2.9980425078738877
+          },
+          {
+            "poi": "rock:random_rock_006",
+            "robot": "scientist_02",
+            "stamp": 1126.6,
+            "distance_m": 3.3167389521888753
+          },
+          {
+            "poi": "rock:random_rock_003",
+            "robot": "scientist_02",
+            "stamp": 1310.0,
+            "distance_m": 3.2917308360766326
+          },
+          {
+            "poi": "rock:random_rock_014",
+            "robot": "scientist_01",
+            "stamp": 1439.4,
+            "distance_m": 3.239295399688814
+          },
+          {
+            "poi": "rock:random_rock_004",
+            "robot": "scientist_01",
+            "stamp": 1707.4,
+            "distance_m": 3.343709677892366
+          }
+        ],
+        "failed_attempts": {},
+        "help_tasks": [],
+        "contacts": {
+          "unsafe_records": 0,
+          "body_contact_records": 0,
+          "raw_non_ground_contact_records": 54
+        },
+        "travel_distance_by_robot_m": {
+          "scientist_01": 207.5833628096904,
+          "scientist_02": 145.86821265449092,
+          "scout_01": 342.87622585612013,
+          "scout_02": 370.4574583930334
+        },
+        "total_travel_distance_m": 1066.7852597133349,
+        "idle_without_task_seconds_by_robot": {
+          "scientist_01": 915.5999999999999,
+          "scientist_02": 1165.1999999999998,
+          "scout_01": 6.7999999999986045,
+          "scout_02": 4.3999999999997215
+        },
+        "longest_all_physically_stationary_s": 10.199999999999996,
+        "control_decision_wall_s": {
+          "p50": 0.001326272498772596,
+          "p95": 0.004046870501406369,
+          "p99": 0.0206978728093237,
+          "maximum": 0.28559789899736643
+        },
+        "planning": {
+          "published_versions": 0,
+          "maximum_sequence_length": 0,
+          "maximum_future_owners": 0,
+          "duplicate_poi_in_plan_sets": 0,
+          "overlap_future_owners_with_current_claims": 0,
+          "expired_published_intentions": 0,
+          "worker_errors": 0,
+          "maximum_worker_elapsed_s": 0,
+          "truncated_versions": 0
+        },
+        "exploration_state": "active"
+      },
+      "depth3": {
+        "source": "logs/mosaic/depth3_1800_01",
+        "sim_time": 1803.8,
+        "status_counts": {
+          "succeeded": 47,
+          "running": 2,
+          "available": 4
+        },
+        "completed_exploration": 35,
+        "completed_measurements": [
+          {
+            "poi": "rock:random_rock_007",
+            "robot": "scientist_01",
+            "stamp": 249.0,
+            "distance_m": 2.8228624884354914
+          },
+          {
+            "poi": "rock:random_rock_010",
+            "robot": "scientist_01",
+            "stamp": 73.8,
+            "distance_m": 3.350471568687523
+          },
+          {
+            "poi": "rock:random_rock_011",
+            "robot": "scientist_01",
+            "stamp": 171.0,
+            "distance_m": 1.1925892496069055
+          },
+          {
+            "poi": "rock:random_rock_000",
+            "robot": "scientist_02",
+            "stamp": 316.6,
+            "distance_m": 0.93687197642559
+          },
+          {
+            "poi": "rock:random_rock_015",
+            "robot": "scientist_02",
+            "stamp": 146.4,
+            "distance_m": 3.1171925445911723
+          },
+          {
+            "poi": "rock:random_rock_009",
+            "robot": "scientist_02",
+            "stamp": 200.8,
+            "distance_m": 3.2601870597623597
+          },
+          {
+            "poi": "rock:random_rock_013",
+            "robot": "scientist_01",
+            "stamp": 657.0,
+            "distance_m": 3.079772651123901
+          },
+          {
+            "poi": "rock:random_rock_002",
+            "robot": "scientist_02",
+            "stamp": 1306.2,
+            "distance_m": 3.2328261672969214
+          },
+          {
+            "poi": "rock:random_rock_014",
+            "robot": "scientist_01",
+            "stamp": 1516.8,
+            "distance_m": 3.333307807686776
+          },
+          {
+            "poi": "rock:random_rock_008",
+            "robot": "scientist_02",
+            "stamp": 1387.4,
+            "distance_m": 3.1926253640347295
+          },
+          {
+            "poi": "rock:random_rock_005",
+            "robot": "scientist_02",
+            "stamp": 1685.6,
+            "distance_m": 2.9916635811711534
+          },
+          {
+            "poi": "rock:random_rock_004",
+            "robot": "scientist_01",
+            "stamp": 1742.0,
+            "distance_m": 3.220698429880894
+          }
+        ],
+        "failed_attempts": {
+          "navigation_timeout": 3
+        },
+        "help_tasks": [],
+        "contacts": {
+          "unsafe_records": 0,
+          "body_contact_records": 0,
+          "raw_non_ground_contact_records": 69
+        },
+        "travel_distance_by_robot_m": {
+          "scientist_01": 137.32410294625612,
+          "scientist_02": 101.91140956290891,
+          "scout_01": 302.53916238022566,
+          "scout_02": 384.35610291306347
+        },
+        "total_travel_distance_m": 926.1307778024542,
+        "idle_without_task_seconds_by_robot": {
+          "scientist_01": 1203.0,
+          "scientist_02": 1363.9999999999998,
+          "scout_01": 9.999999999999893,
+          "scout_02": 11.00000000000032
+        },
+        "longest_all_physically_stationary_s": 9.799999999999997,
+        "control_decision_wall_s": {
+          "p50": 0.0014841944994259393,
+          "p95": 0.0038411376997828477,
+          "p99": 0.01641298396090861,
+          "maximum": 0.1060163010006363
+        },
+        "planning": {
+          "published_versions": 1031,
+          "maximum_sequence_length": 3,
+          "maximum_future_owners": 5,
+          "duplicate_poi_in_plan_sets": 0,
+          "overlap_future_owners_with_current_claims": 0,
+          "expired_published_intentions": 0,
+          "worker_errors": 0,
+          "maximum_worker_elapsed_s": 0.1441766429998097,
+          "truncated_versions": 0
+        },
+        "exploration_state": "active"
+      }
+    },
+    "interpretation": "This single seed trial does not show a throughput improvement from depth3: 35 explorations + 12 measurements vs depth1 41 + 15. Depth3 provides predicted sequences and coordinated soft intentions, not globally optimal cumulative-reward search. Asynchronous planning timing can change greedy choices; results are not deterministic success-rate estimates."
+  },
+  "previous_fleet_run": {
+    "source": "logs/mosaic/uniform_2s2m_1800_02",
+    "validation": "logs/mosaic/pre_depth_planning/mosaic_validation.json",
+    "note": "Previous queue_size2 single-step run; not used as the matched depth1 baseline"
+  },
+  "initial_full_suite_failure": {
+    "log": "logs/mosaic/depth_full01.log",
+    "result": "1 failed, 94 passed",
+    "cause": "Changing old 40m two-vehicle exploration queue from2 to3 altered route; stopped scientist blocked scout; local_path_blocked attempts",
+    "resolution": "Preserve original queue_size2 in configs/mosaic/demo.yaml; generated80m four-vehicle scene retains queue_size3",
+    "targeted_retest": "logs/mosaic/depth_two_vehicle_queue2.log",
+    "final_full_retest": "logs/mosaic/depth_full02.log"
+  }
+}

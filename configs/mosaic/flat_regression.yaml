@@ -1,0 +1,52 @@
+# Capability heterogeneity; scientific instruments and detections are simulated.
+image: space-robotics-rl:ionic
+control_dt: 0.2
+sensors_enabled: false
+exploration_seconds: 10.0
+providers:
+  localization: gazebo_ground_truth
+  global_map: known_layout
+  local_map: known_map_crop
+  detection: simulated_range_detector
+navigation:
+  global_planner: grid_astar
+  local_controller: path_tracker
+map:
+  bounds: [-12, -10, 12, 10]
+  resolution: 0.25
+robots:
+  - name: lunar_hauler
+    model: lunar_hauler
+    home: [-6, 4, 0]
+    radius: 1.7
+    turn_offset: 0.35
+    capabilities: [move, explore, rock_candidate]
+    preferences: {explore: 110, rock_candidate: 130, move: 80}
+  - name: lunar_excavator
+    model: lunar_excavator
+    home: [-6, -4, 0]
+    radius: 1.7
+    turn_offset: 0.35
+    capabilities: [move, ground_measurement, rock_measurement]
+    preferences: {ground_measurement: 110, rock_measurement: 130, move: 80}
+obstacles:
+  - id: central_boulder
+    bounds: [-0.5, -1, 0.5, 1]
+    height: 1
+  - id: sample_rock
+    bounds: [6.75, 3.75, 7.25, 4.25]
+    height: 0.5
+targets:
+  - id: sample_rock
+    target: [7, 4, 0]
+    approach: [3, 4, 0]
+    confirmation_radius: 4.5
+    measurement_max_distance: 4.5
+detection_radius: 6.5
+pois:
+  - id: explore_east
+    kind: explore
+    pose: [1, 4, 0]
+  - id: ground_south
+    kind: ground_measurement
+    pose: [0, -4, 0]
